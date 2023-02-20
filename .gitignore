@@ -12,3 +12,14 @@ web-build/
 
 # macOS
 .DS_Store
+
+*.rar
+*.zip
+*.psd
+app2/
+app-a.js
+App2.js
+AppFirst.js
+app/components/forms/old/
+app/screen/old/
+
