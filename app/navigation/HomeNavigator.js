@@ -5,12 +5,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "../screen/HomeScreen";
+import OrdersActiveScreen from "../screen/OrdersActiveScreen";
 
 const Stack = createNativeStackNavigator();
 
 const HomeNavigator = () => (
   <Stack.Navigator mode="modal">
-    <Stack.Screen name="Welcome to HomeFood" component={HomeScreen} />
+    <Stack.Screen name="Services on Process" component={OrdersActiveScreen} />
   </Stack.Navigator>
 );
 

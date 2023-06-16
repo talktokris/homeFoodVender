@@ -6,13 +6,21 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import FoodListingScreen from "../screen/FoodListingScreen";
 import FoodViewScreen from "../screen/FoodViewScreen";
+import FoodAddScreen from "../screen/FoodAddScreen";
+import FoodEditScreen from "../screen/FoodEditScreen";
+
+import ComplitedScreen from "../screen/ComplitedScreen";
 
 const Stack = createNativeStackNavigator();
 
 const FoodNavigator = () => (
   <Stack.Navigator mode="modal">
-    <Stack.Screen name="Food Search" component={FoodListingScreen} />
+    <Stack.Screen name="Food Menu" component={FoodListingScreen} />
     <Stack.Screen name="Food Details" component={FoodViewScreen} />
+    <Stack.Screen name="Add New Menu" component={FoodAddScreen} />
+    <Stack.Screen name="Edit Menu" component={FoodEditScreen} />
+
+    <Stack.Screen name="Done" component={ComplitedScreen} />
   </Stack.Navigator>
 );
 

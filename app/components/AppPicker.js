@@ -90,8 +90,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     flexDirection: "row",
-    padding: 10,
+    padding: 5,
     marginVertical: 5,
+    marginLeftLeft: 5,
   },
   textInput: {
     fontSize: 18,
@@ -100,9 +101,11 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    color: colors.medium,
+    color: colors.black,
+    paddingLeft: 5,
+    paddingTop: 1,
   },
-  placeholder: { color: colors.medium, flex: 1 },
+  placeholder: { color: colors.medium, flex: 1, paddingLeft: 10 },
   icon: {
     marginRight: 10,
   },

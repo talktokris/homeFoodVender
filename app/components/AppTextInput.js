@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary,
     borderRadius: 10,
     flexDirection: "row",
-    padding: 10,
+    padding: 8,
     marginVertical: 10,
   },
   textInput: {
-    fontSize: 18,
+    fontSize: 15,
     fontFamily: Platform.OS === "android" ? fonts.android : fonts.ios,
     color: colors.secondary,
     width: "85%",

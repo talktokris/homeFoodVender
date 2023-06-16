@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../config/colors";
-function AppButton({ title, color = "primary", icon, onPress }) {
+function AppButtonSmall({ title, color = "primary", icon, onPress }) {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: colors[color] }]}
@@ -23,16 +23,16 @@ function AppButton({ title, color = "primary", icon, onPress }) {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 10,
+    borderRadius: 7,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: 5,
     width: "100%",
-    marginVertical: 10,
+    marginVertical: 5,
   },
   text: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
   icon: {
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppButton;
+export default AppButtonSmall;

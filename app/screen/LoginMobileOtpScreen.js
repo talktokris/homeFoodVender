@@ -23,28 +23,38 @@ import AppText from "../components/AppText";
 import colors from "../config/colors";
 import ActivityIndicator from "../components/ActivityIndicator";
 import AppCheckBox from "../components/AppCheckBox";
+import useAuth from "../auth/useAuth";
 import routes from "../navigation/routes";
+import authApi from "../api/auth";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(4).label("Password"),
+  //mobile: Yup.string().required().email().label("Email"),
+  otp: Yup.string()
+    .required("Enter OTP")
+    .min(6, "OTP Invalid")
+    .max(6, "OTP Invalid")
+    .typeError("OTP Invalid"),
 });
 
-function LoginMobileOtpScreen({ navigation }) {
-  /*
+function LoginMobileOtpScreen({ route, navigation }) {
+  const country = route.params.country;
+  const mobile = route.params.mobile;
+
   const { logIn } = useAuth();
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFailMessage, setloginFailMessage] = useState(null);
 
   const [isLoading, setLoading] = useState(false);
 
-  const handleSubmit = async ({ email, password }) => {
-    setLoading(true);
-
-    const result = await authApi.login(email, password);
+  const handleSubmit = async ({ textMobile, otp }) => {
+    // setLoading(true);
+    // console.log(country.name + "-" + mobile + "-" + otp);
+    const result = await authApi.loginMobile(country, mobile, textMobile, otp);
     // const tokenSet= result.access_token;
-    // console.log(result);
+    // setLoading(false);
+    // console.log(result.data.data.token);
     //console.log("==================");
+    setLoading(false);
 
     if (!result.ok || result.data == null) {
       setLoading(false);
@@ -56,92 +66,85 @@ function LoginMobileOtpScreen({ navigation }) {
     if (result.data.error == "Unauthorized") {
       setLoading(false);
       setloginFailMessage("Invalid email and/or password");
-      return setLoginFailed(true);
+      setLoginFailed(true);
     }
     setLoading(false);
     setLoginFailed(false);
-    logIn(result.data.access_token);
-    // console.log(result.data.access_token);
-
-   
+    logIn(result.data.data.token);
+    // console.log(result.data.data.token);
   };
-   */
 
   return (
-    <Screen>
-      <View style={styles.container}>
-        <Image
-          source={require("../assets/images/logo.png")}
-          style={styles.image}
-        />
-        <AppForm
-          initialValues={{ email: "", password: "" }}
-          onSubmit=""
-          validationSchema={validationSchema}
-        >
-          <AppText style={styles.msg}>
-            Please enter OTP password send to your number
-          </AppText>
-          <AppFormField
-            name="password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="cellphone"
-            placeholder="+60123456789"
-            textContentType="password"
-            secureTextEntry={true}
-            maxLength={11}
+    <>
+      <ActivityIndicator visible={isLoading} />
+      {/* {<ActivityIndicator visible={registerApi.loading || loginApi.loading} />} */}
+      <Screen>
+        <View style={styles.container}>
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.image}
           />
-          <View style={styles.otp}>
+          <AppForm
+            initialValues={{ textMobile: country.code + mobile, otp: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <AppText style={styles.msg}>
+              Please enter OTP password send to your number
+            </AppText>
+
             <AppFormField
-              name="password"
+              name="textMobile"
               autoCapitalize="none"
               autoCorrect={false}
               icon="cellphone"
-              placeholder=" _  _  _  _  _  _"
-              textContentType="password"
-              secureTextEntry={true}
-              maxLength={6}
-              width="70%"
+              placeholder="Mobile No"
+              textContentType="telephoneNumber"
+              secureTextEntry={false}
+              maxLength={11}
+              editable={false}
             />
-            <TouchableOpacity onPress={() => console.log("Send OTP")}>
-              <AppText style={styles.resend}>Resend OTP</AppText>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.otp}>
+              <AppFormField
+                name="otp"
+                autoCapitalize="none"
+                autoCorrect={false}
+                icon="cellphone"
+                placeholder=" _  _  _  _  _  _"
+                textContentType="oneTimeCode"
+                secureTextEntry={false}
+                maxLength={6}
+                width="70%"
+              />
+              <TouchableOpacity onPress={() => console.log("Send OTP")}>
+                <AppText style={styles.resend}>Resend OTP</AppText>
+              </TouchableOpacity>
+            </View>
+            <SubmitButton title="Confirm" color="secondary" />
 
-          <LinkButton
-            title=" Confirm"
-            color="secondary"
-            onPress={() => {
-              console.log("OK ");
-              // navigation.navigate("HomeScreen");
-              // navigation.navigate("HomeScreen");
-              //  navigation.navigate("Root", { screen: "HomeScreen" });
-            }}
-          />
-
-          <View style={styles.viewStyleForLine}></View>
-          <View>
-            <LinkButton
-              title=" Login by email"
-              color="secondary"
-              icon="lock"
-              onPress={() => {
-                navigation.navigate(routes.AUTH_EMAIL_LOGIN);
-              }}
-            />
-            <LinkButton
-              title=" Register by email"
-              color="primary"
-              icon="login"
-              onPress={() => {
-                navigation.navigate(routes.AUTH_REGISTER);
-              }}
-            />
-          </View>
-        </AppForm>
-      </View>
-    </Screen>
+            <View style={styles.viewStyleForLine}></View>
+            <View>
+              <LinkButton
+                title=" Login by email"
+                color="secondary"
+                icon="lock"
+                onPress={() => {
+                  navigation.navigate(routes.AUTH_EMAIL_LOGIN);
+                }}
+              />
+              <LinkButton
+                title=" Register by email"
+                color="primary"
+                icon="login"
+                onPress={() => {
+                  navigation.navigate(routes.AUTH_REGISTER);
+                }}
+              />
+            </View>
+          </AppForm>
+        </View>
+      </Screen>
+    </>
   );
 }
 const styles = StyleSheet.create({

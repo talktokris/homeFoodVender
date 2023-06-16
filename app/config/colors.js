@@ -10,8 +10,10 @@ export default {
   lightGray: "#f8f4f4",
   errorColor: "#ff5252",
   orange: "#FFA500",
+  greenDark: "008000",
   green: "#9ACD32",
   separator: "#CCCCCC",
   light: "#EEEEEE",
   chatme: "#57606f",
+  blueRibbon: "306EFF",
 };

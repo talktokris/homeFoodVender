@@ -128,7 +128,7 @@ const AppNavigator = (color = "blue") => {
       />
 
       <Tab.Screen
-        name="Order"
+        name="Orders"
         component={OrderNavigator}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -161,7 +161,7 @@ const AppNavigator = (color = "blue") => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
-              name="view-list"
+              name="food-fork-drink"
               color={color}
               size={size}
             />

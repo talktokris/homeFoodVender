@@ -17,6 +17,7 @@ import FoodItem from "../components/FoodItem";
 import AppTextSearch from "../components/AppTextSearch";
 import AppText from "../components/AppText";
 import AppButton from "../components/AppButton";
+import menuApi from "../api/menu";
 
 const messages = [
   {
@@ -78,43 +79,51 @@ const messages = [
   },
 ];
 
-function FoodViewScreen({ navigation }) {
-  /*
+function FoodViewScreen({ route, navigation }) {
+  const itemData = route.params.itemData;
+  //console.log(itemData);
   const { user, logOut } = useAuth();
   const currrentUser = user.id;
 
   const [isLoading, setLoading] = useState(true);
   const [users, setUsers] = useState(null);
 
+  const handleDelete = async ({ id }) => {
+    //  console.log("Hi: " + id);
+    setLoading(true);
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getData();
-    });
-    return unsubscribe;
-  }, [navigation]);
+    const result = await menuApi.deleteMenu(id);
+    // const tokenSet= result.access_token;
+    //console.log(result.data);
+    //console.log("==================");
+    setLoading(false);
 
-  const getData = useCallback(() => {
-    setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
-    // useApi(resume.getResumeData, { currrentUser });
-    userUpdate
-      .messageFatch(currrentUser)
-      .then((data) => {
-        setUsers(data);
-        // console.log(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        // display error
-        setLoading(false); // stop the loader
+    if (!result.ok) return;
+    if (!result.data) {
+      setEstatus(true);
+      setError(
+        "Unable to connect to server. Please check your Internet connection"
+      );
+    } else if (result.data.success == false) {
+      //  console.log("Krishna");
+      setEstatus(true);
+      setError(result.data.message);
+    } else if (result.data.success == true) {
+      const { data: id, message: messageSend } = result.data;
+      navigation.navigate(routes.PRO_DONE, {
+        message: messageSend,
+        id: id,
+        navRoute: routes.SEARCH_FOOD,
       });
-  }, []);
-  // console.log(users);
-  var key = 1;
-  */
+    } else {
+      setEstatus(true);
+      setError("Unknown error");
+    }
+  };
+
   return (
     <Screen>
-      <AppText style={styles.heading}>Non Veg Thali</AppText>
+      <AppText style={styles.heading}>{itemData.food_title}</AppText>
       <Separater />
       <View>
         <Image
@@ -151,42 +160,32 @@ function FoodViewScreen({ navigation }) {
           />
         </View>
       </View>
-      <AppText style={styles.text}>
-        Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green
-        Salad
-      </AppText>
+      <AppText style={styles.text}>{itemData.food_description}</AppText>
       <Separater />
-      <View style={styles.itemArea}>
-        <MaterialCommunityIcons
-          style={styles.icon}
-          name="minus-circle"
-          size={40}
-          color={colors.primary}
-        />
-        <View style={styles.itemInput}>
-          <AppText style={styles.item}> 1 </AppText>
+
+      <View style={styles.bottomArea}>
+        <View style={styles.bottomLeft}>
+          <AppButton
+            title="  Edit"
+            onPress={() => {
+              navigation.navigate(routes.MENU_EDIT_FOOD, {
+                itemData: itemData,
+              });
+            }}
+            color="secondary"
+            icon="lead-pencil"
+          />
         </View>
 
-        <MaterialCommunityIcons
-          style={styles.icon}
-          name="plus-circle"
-          size={40}
-          color={colors.primary}
-        />
-      </View>
-      <View style={styles.btnContainer}>
-        <AppButton
-          title=" Add to Cart"
-          color="secondary"
-          icon="cart-plus"
-          onSubmit={() => console.log("register")}
-        />
-        <AppButton
-          title=" Check Out"
-          color="secondary"
-          icon="logout"
-          onSubmit={() => console.log("register")}
-        />
+        <View style={styles.bottomRight}>
+          <AppButton
+            title="  Delete"
+            onPress={() => {
+              handleDelete(itemData);
+            }}
+            icon="delete"
+          />
+        </View>
       </View>
     </Screen>
   );
@@ -238,6 +237,10 @@ const styles = StyleSheet.create({
   btnContainer: {
     padding: 5,
   },
+
+  bottomArea: { flexDirection: "row" },
+  bottomLeft: { width: "50%", padding: 30 },
+  bottomRight: { width: "50%", flexDirection: "row-reverse", padding: 30 },
 });
 
 export default FoodViewScreen;

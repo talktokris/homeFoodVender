@@ -24,26 +24,36 @@ import colors from "../config/colors";
 import ActivityIndicator from "../components/ActivityIndicator";
 import AppCheckBox from "../components/AppCheckBox";
 import routes from "../navigation/routes";
+import authApi from "../api/auth";
+
+const phoneRegex = RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(4).label("Password"),
+  // mobile: Yup.string().required().min(10).label("Mobile"),
+  mobile: Yup.string()
+    .matches(phoneRegex, "Invalid Mobile No")
+    .required("Phone is required"),
 });
 
+const countryObj = { id: 1, code: "+60", name: "Malaysia" };
+
 function LoginMobileScreen({ navigation }) {
-  /*
-  const { logIn } = useAuth();
+  //const { logIn } = useAuth();
   const [loginFailed, setLoginFailed] = useState(false);
   const [loginFailMessage, setloginFailMessage] = useState(null);
 
   const [isLoading, setLoading] = useState(false);
 
-  const handleSubmit = async ({ email, password }) => {
+  const handleSubmit = async ({ country, mobile }) => {
     setLoading(true);
 
-    const result = await authApi.login(email, password);
+    // console.log(country + "-" + mobile);
+
+    const result = await authApi.otpRequest(country, mobile);
     // const tokenSet= result.access_token;
-    // console.log(result);
+    setLoading(false);
+    // console.log(result.data);
+
     //console.log("==================");
 
     if (!result.ok || result.data == null) {
@@ -51,7 +61,8 @@ function LoginMobileScreen({ navigation }) {
       setloginFailMessage(
         "Unable to connect to server. Please check your Internet connection"
       );
-      return setLoginFailed(true);
+      // return
+      setLoginFailed(true);
     }
     if (result.data.error == "Unauthorized") {
       setLoading(false);
@@ -60,83 +71,91 @@ function LoginMobileScreen({ navigation }) {
     }
     setLoading(false);
     setLoginFailed(false);
-    logIn(result.data.access_token);
+    //  logIn(result.data.access_token);
     // console.log(result.data.access_token);
-
-   
+    if (result.data.data == 1) {
+      navigation.navigate(routes.AUTH_MOBILE_OTP, {
+        country: country,
+        mobile: mobile,
+      });
+    }
   };
-   */
 
   return (
-    <Screen>
-      <View style={styles.container}>
-        <Image
-          source={require("../assets/images/logo.png")}
-          style={styles.image}
-        />
-        <AppForm
-          initialValues={{ email: "", password: "" }}
-          onSubmit=""
-          validationSchema={validationSchema}
-        >
-          <AppFormField
-            name="email"
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="earth"
-            keyboardType="email-address"
-            placeholder="( +60 ) Malaysia"
-            textContentType="emailAddress"
-            editable={false}
+    <>
+      <ActivityIndicator visible={isLoading} />
+      {/* {<ActivityIndicator visible={registerApi.loading || loginApi.loading} />} */}
+      <Screen>
+        <View style={styles.container}>
+          <Image
+            source={require("../assets/images/logo.png")}
+            style={styles.image}
           />
+          <AppForm
+            initialValues={{ country: countryObj, mobile: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={validationSchema}
+          >
+            <AppFormField
+              name="country"
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="earth"
+              keyboardType="email-address"
+              placeholder="( +60 ) Malaysia"
+              textContentType="name"
+              editable={false}
+            />
 
-          <AppFormField
-            name="password"
-            autoCapitalize="none"
-            autoCorrect={false}
-            icon="cellphone"
-            placeholder="Mobile No"
-            textContentType="password"
-            secureTextEntry={true}
-            maxLength={11}
-          />
+            <AppFormField
+              name="mobile"
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="cellphone"
+              placeholder="Mobile No"
+              textContentType="telephoneNumber"
+              secureTextEntry={false}
+              maxLength={11}
+            />
 
-          <AppCheckBox
-            text="I accept the"
-            linkText="terms and conditions"
-            onPress={console.log("I accept")}
-          />
+            <AppCheckBox
+              text="I accept the"
+              linkText="terms and conditions"
+              onPress={() => console.log("I accept")}
+            />
 
-          <LinkButton
+            <SubmitButton color="secondary" title="Login" />
+            {/* <LinkButton
             title=" Login"
             color="secondary"
             onPress={() => {
               navigation.navigate(routes.AUTH_MOBILE_OTP);
             }}
-          />
+          /> */}
 
-          <View style={styles.viewStyleForLine}></View>
-          <View>
-            <LinkButton
-              title=" Login by email"
-              color="secondary"
-              icon="lock"
-              onPress={() => {
-                navigation.navigate(routes.AUTH_EMAIL_LOGIN);
-              }}
-            />
-            <LinkButton
-              title=" Register by email"
-              color="primary"
-              icon="login"
-              onPress={() => {
-                navigation.navigate(routes.AUTH_REGISTER);
-              }}
-            />
-          </View>
-        </AppForm>
-      </View>
-    </Screen>
+            <View style={styles.viewStyleForLine}></View>
+            <View>
+              <LinkButton
+                title=" Login by email"
+                color="secondary"
+                icon="lock"
+                onPress={() => {
+                  navigation.navigate(routes.AUTH_EMAIL_LOGIN);
+                }}
+              />
+              <LinkButton
+                title=" Register by email"
+                color="primary"
+                icon="login"
+                onPress={() => {
+                  navigation.navigate(routes.AUTH_REGISTER);
+                }}
+              />
+            </View>
+          </AppForm>
+        </View>
+      </Screen>
+    </>
   );
 }
 const styles = StyleSheet.create({

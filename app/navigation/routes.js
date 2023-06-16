@@ -10,15 +10,19 @@ export default Object.freeze({
 
   ORDER_TRACKING: "Home",
 
-  SEARCH_FOOD: "Search",
+  SEARCH_FOOD: "Food Menu",
   SEARCH_DETAILS: "Food Details",
+  MENU_ADD_FOOD: "Add New Menu",
+  MENU_EDIT_FOOD: "Edit Menu",
 
   ACCOUNT_PROFILE: "Profile",
   ACCOUNT_ADDRESS: "Address",
-  ACCOUNT_ADD_ADDRESS: "New Address",
+  ACCOUNT_SALES_STATEMENT: "Earning Statement",
   ACCOUNT_MESSAGES: "Messages",
   ACCOUNT_SEARCH_RADIUS: "Search Radius",
-  ACCOUNT_ORDER_HISTORY: "Order History",
+  ACCOUNT_ORDER_HISTORY: "Sales History",
   ACCOUNT_SUPPORT: "Support",
   ACCOUNT_CHANGE_PASSWORD: "Change Password",
+
+  PRO_DONE: "Done",
 });
