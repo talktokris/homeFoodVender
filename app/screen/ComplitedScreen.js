@@ -26,7 +26,7 @@ function ComplitedScreen({ route, navigation }) {
         <AppButton
           title="Ok"
           onPress={() => {
-            navigation.navigate(navRoute);
+            navigation.navigate(navRoute, { id: foodId });
           }}
         />
       </View>

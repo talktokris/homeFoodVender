@@ -11,47 +11,12 @@ import ActivityIndicator from "../components/ActivityIndicator";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
+import settings from "../config/setting";
 
 import FoodItem from "../components/FoodItem";
 import AppTextSearch from "../components/AppTextSearch";
 import { ErrorMessage, LinkButton } from "../components/forms";
 import menuApi from "../api/menu";
-
-const messages = [
-  {
-    id: 1,
-    title: "Non Veg Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img1.jpg"),
-    price: 15,
-    currency: "RM",
-    distance: 3,
-    distanceUnit: "KM",
-  },
-  {
-    id: 2,
-    title: "Mutton Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img2.jpg"),
-    price: 12,
-    currency: "RM",
-    distance: 0.5,
-    distanceUnit: "KM",
-  },
-  {
-    id: 3,
-    title: "Fish Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img3.jpg"),
-    price: 17,
-    currency: "RM",
-    distance: 1.5,
-    distanceUnit: "KM",
-  },
-];
 
 function FoodListingScreen({ navigation }) {
   const { user, logOut } = useAuth();
@@ -93,6 +58,23 @@ function FoodListingScreen({ navigation }) {
   }, []);
 
   // Delete
+
+  function makeUri(defID, imaData) {
+    // console.log(imaData.food_menu_id);
+    let imgUri = (imgUri = settings.imageUrl + "/menu/no_image.jpg");
+
+    if (imaData != null)
+      imgUri =
+        settings.imageUrl +
+        "/menu/" +
+        imaData.food_menu_id +
+        "/" +
+        imaData.image_name;
+    //  console.log(imgUri);
+
+    return imgUri;
+  }
+
   return (
     <>
       <ActivityIndicator visible={isLoading} />
@@ -107,13 +89,14 @@ function FoodListingScreen({ navigation }) {
                 title={item.food_title}
                 subTitle={item.food_description}
                 //  image={item.image}
-                image="../assets/images/img1.jpg"
+                image={makeUri(item.menu_profile_img_id, item.default_image)}
                 price={item.vender_price}
                 distance={item.active_status}
                 distanceUnit={item.veg_status}
                 onPress={() => {
+                  // console.log(item.id);
                   navigation.navigate(routes.SEARCH_DETAILS, {
-                    itemData: item,
+                    id: item.id,
                   });
                 }}
                 // onPress={() => navigation.navigate(routes.AC_MESAGES_VIEW, item)}
@@ -129,7 +112,7 @@ function FoodListingScreen({ navigation }) {
             <LinkButton
               title=" Add New Menu"
               color="secondary"
-              icon="google-maps"
+              icon="food"
               onPress={() => {
                 // console.log("Hi");
                 navigation.navigate(routes.MENU_ADD_FOOD);

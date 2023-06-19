@@ -80,7 +80,7 @@ function FoodItem({
       <View style={styles.container}>
         <TouchableHighlight underlayColor={colors.lightGray} onPress={onPress}>
           <View style={styles.content}>
-            {image && <Image style={styles.image} source={image} />}
+            {image && <Image style={styles.image} source={{ uri: image }} />}
             <View style={styles.appTextContainer}>
               <AppText style={styles.title} numberOfLines={2}>
                 {title}

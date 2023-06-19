@@ -43,8 +43,10 @@ const editMenu = async (
   customer_price,
   discountValue,
   veg_status,
-  active_status
+  active_status,
+  itemData
 ) => {
+  /*
   const data = {
     food_title: title,
     food_description: description,
@@ -54,6 +56,7 @@ const editMenu = async (
     veg_status: veg_status.id,
     active_status: active_status.id,
   };
+*/
   // console.log(data);
   const responce = await client.post("/vender-menu-edit", {
     food_title: title,
@@ -63,7 +66,9 @@ const editMenu = async (
     discount_per: discountValue,
     veg_status: veg_status.id,
     active_status: active_status.id,
+    id: itemData.id,
   });
+  // console.log(responce.data);
   return responce;
 };
 
@@ -75,22 +80,37 @@ const deleteMenu = async (id) => {
   //console.log(responce);
 };
 
-const imageUploadMenu = async (countryCode, mobileNo) => {
-  const responce = await client.post("/vender-menu-image-upload", {
-    country_id: countryCode.id,
-    mobile_no: mobileNo,
+const imageUploadMenu = async (fileUri, menuID) => {
+  var fileExtension = fileUri.split(".").pop();
+  var imageName = Math.floor(Date.now() / 1000);
+
+  // console.log(imageName + "-" + fileExtension);
+
+  const data = new FormData();
+  data.append("menu_id", menuID);
+  data.append("image_name", {
+    name: menuID + "-" + imageName + "." + fileExtension,
+    type: "image/jpeg",
+    uri: fileUri,
   });
+
+  const responce = await client.post("/vender-menu-image-upload", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return responce;
   //console.log(responce);
 };
 
-const imageDeleteMenu = async (countryCode, mobileNo) => {
+const imageDeleteMenu = async (image_id, menu_id) => {
   const responce = await client.post("/vender-menu-image-delete", {
-    country_id: countryCode.id,
-    mobile_no: mobileNo,
+    image_id: image_id,
+    menu_id: menu_id,
   });
   return responce;
-  //console.log(responce);
+  // console.log(image_id + "-" + menu_id);
 };
 const setImageDefautlMenu = async (countryCode, mobileNo) => {
   const responce = await client.post("/vender-menu-set-default-image", {
@@ -107,13 +127,13 @@ const fetchAllMenu = async () => {
   // console.log(responce.ok);
 };
 
-const fetchSingleMenu = async (countryCode, mobileNo) => {
+const fetchSingleMenu = async (id) => {
+  // console.log(id);
   const responce = await client.post("/vender-menu-fetch-single", {
-    country_id: countryCode.id,
-    mobile_no: mobileNo,
+    id: id,
   });
   return responce;
-  //console.log(responce);
+  //console.log(responce.data);
 };
 export default {
   createMenu,

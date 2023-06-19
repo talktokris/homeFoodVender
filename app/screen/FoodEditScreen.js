@@ -114,17 +114,18 @@ function FoodEditScreen({ route, navigation }) {
   }) => {
     setLoading(true);
 
-    const result = await menuApi.createMenu(
+    const result = await menuApi.editMenu(
       title,
       description,
       venderPrice,
       customer_price,
       discountValue,
       veg_status,
-      active_status
+      active_status,
+      itemData
     );
     // const tokenSet= result.access_token;
-    console.log(result.data);
+    //  console.log(result.data);
     //console.log("==================");
     setLoading(false);
 

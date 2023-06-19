@@ -1,7 +1,10 @@
 export default {
-  serverUrl: "http://localhost:8000",
-  apiUrl: "http://localhost:8000/api",
-  imageUrl: "http://localhost:8000/vender_images",
+  serverUrl:
+    "http://localhost/projects/homefood/backend/homefood-backend/public",
+  apiUrl:
+    "http://localhost/projects/homefood/backend/homefood-backend/public/api",
+  imageUrl:
+    "http://localhost/projects/homefood/backend/homefood-backend/public/vender_images",
 };
 
 /* Live settings

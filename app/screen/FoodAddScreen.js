@@ -103,7 +103,7 @@ function FoodAddScreen({ route, navigation }) {
       active_status
     );
     // const tokenSet= result.access_token;
-    console.log(result.data);
+    // console.log(result.data);
     //console.log("==================");
     setLoading(false);
 

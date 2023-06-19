@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
 import { View, StyleSheet, FlatList, Image } from "react-native";
 
@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Screen from "../components/Screen";
 import Separater from "../components/Separater";
+import { ErrorMessage } from "../components/forms";
 
 import ActivityIndicator from "../components/ActivityIndicator";
 //import userUpdate from "../api/userUpdate";
@@ -18,77 +19,57 @@ import AppTextSearch from "../components/AppTextSearch";
 import AppText from "../components/AppText";
 import AppButton from "../components/AppButton";
 import menuApi from "../api/menu";
-
-const messages = [
-  {
-    id: 1,
-    title: "Non Veg Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img1.jpg"),
-    price: 15,
-    currency: "RM",
-    distance: 3,
-    distanceUnit: "KM",
-  },
-  {
-    id: 2,
-    title: "Mutton Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img2.jpg"),
-    price: 12,
-    currency: "RM",
-    distance: 0.5,
-    distanceUnit: "KM",
-  },
-  {
-    id: 3,
-    title: "Fish Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img3.jpg"),
-    price: 17,
-    currency: "RM",
-    distance: 1.5,
-    distanceUnit: "KM",
-  },
-
-  {
-    id: 4,
-    title: "Special Cheese Dosa",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img4.jpg"),
-    price: 19,
-    currency: "RM",
-    distance: 1.8,
-    distanceUnit: "KM",
-  },
-
-  {
-    id: 5,
-    title: "Non Veg Thali",
-    subTitle:
-      "Chopathi Ponni Rice Kootu Chicken Fry, Fish Fry Rasom Curd, Simple Green Salad",
-    image: require("../assets/images/img5.jpg"),
-    price: 11,
-    currency: "RM",
-    distance: 2.3,
-    distanceUnit: "KM",
-  },
-];
+import ImageInputList from "../components/ImageInputList";
 
 function FoodViewScreen({ route, navigation }) {
-  const itemData = route.params.itemData;
-  //console.log(itemData);
+  const fethcID = route.params.id;
+  // console.log(fethcID);
   const { user, logOut } = useAuth();
   const currrentUser = user.id;
 
-  const [isLoading, setLoading] = useState(true);
-  const [users, setUsers] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState();
+  const [eStatus, setEstatus] = useState(false);
+  const [menuData, setMenuData] = useState([]);
 
-  const handleDelete = async ({ id }) => {
+  const activeData = user.options.active_status;
+  const vegStatusData = user.options.veg_status;
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getData();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  const getData = useCallback((id) => {
+    setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
+    // useApi(resume.getResumeData, { currrentUser });
+    //console.log(fethcID);
+    menuApi
+      .fetchSingleMenu(fethcID)
+      .then((data) => {
+        //   console.log(data.data.results);
+        if (data.ok) {
+          setMenuData(data);
+          setLoading(false);
+          setMenuData(data.data.results[0]);
+
+          //   console.log(data.data.results[0].images);
+          //  console.log("Krishna : " + data.data.results[0].id);
+        } else {
+          setError(
+            "Unable to get the database. Please check your internet connection"
+          );
+          setEstatus(true);
+        }
+      })
+      .catch((error) => {
+        // display error
+        setLoading(false); // stop the loader
+      });
+  }, []);
+  const handleDelete = async (id) => {
     //  console.log("Hi: " + id);
     setLoading(true);
 
@@ -120,74 +101,172 @@ function FoodViewScreen({ route, navigation }) {
       setError("Unknown error");
     }
   };
+  /*
+  const onRemoveImage = (image) => {
+    // navigation.navigate(routes.MENU_IMAGE_UPLOAD, { menuID: fethcID });
+    console.log("RemoveClicked : " + image.id);
+    deleteMenu;
+  };
+*/
+  const onRemoveImage = async (image) => {
+    setLoading(true);
+
+    const result = await menuApi.imageDeleteMenu(image.id, fethcID);
+    // const tokenSet= result.access_token;
+    //console.log(result.data);
+    //console.log("==================");
+    setLoading(false);
+
+    if (!result.ok) return;
+    if (!result.data) {
+      setEstatus(true);
+      setError(
+        "Unable to connect to server. Please check your Internet connection"
+      );
+    } else if (result.data.success == false) {
+      //  console.log("Krishna");
+      setEstatus(true);
+      setError(result.data.message);
+    } else if (result.data.success == true) {
+      const { data: id, message: messageSend } = result.data;
+      navigation.navigate(routes.PRO_DONE, {
+        message: messageSend,
+        id: id,
+        navRoute: routes.SEARCH_FOOD,
+      });
+    } else {
+      setEstatus(true);
+      setError("Unknown error");
+    }
+  };
+  const onAddImage = () => {
+    // console.log("Add Image Clicked 2");
+    navigation.navigate(routes.MENU_IMAGE_UPLOAD, { menuID: fethcID });
+  };
+
+  function activeStaus(status) {
+    const statusSelectedItem = activeData.find((c) => c.id == status);
+
+    if (typeof statusSelectedItem !== "undefined") {
+      return statusSelectedItem.title;
+    }
+  }
+
+  function vegStaus(status) {
+    const vegSelectedItem = vegStatusData.find((c) => c.id == status);
+
+    if (typeof vegSelectedItem !== "undefined") {
+      return vegSelectedItem.title;
+    }
+  }
 
   return (
-    <Screen>
-      <AppText style={styles.heading}>{itemData.food_title}</AppText>
-      <Separater />
-      <View>
-        <Image
-          source={require("../assets/images/img1.jpg")}
-          style={styles.image}
-        />
-        <View style={styles.nav}>
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="circle"
-            size={20}
-            color={colors.primary}
-          />
+    <>
+      <ActivityIndicator visible={isLoading} />
+      <ErrorMessage error={error} visible={eStatus} />
+      {!isLoading && menuData && (
+        <Screen>
+          <AppText style={styles.heading}>{menuData.food_title}</AppText>
+          <Separater />
 
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="circle"
-            size={20}
-            color={colors.primary}
-          />
+          <View>
+            <ImageInputList
+              imageUris={menuData.images}
+              itemID={fethcID}
+              onRemoveImage={onRemoveImage}
+              onAddImage={onAddImage}
+            />
+          </View>
+          <AppText style={styles.text}>{menuData.food_description}</AppText>
+          <Separater />
 
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="circle"
-            size={20}
-            color={colors.primary}
-          />
+          <View style={styles.bottomArea}>
+            <View style={styles.bottomLeft}>
+              <AppText style={styles.location} numberOfLines={1}>
+                Menu ID
+              </AppText>
+              <AppText style={styles.price} numberOfLines={1}>
+                HM {menuData.id}
+              </AppText>
+            </View>
 
-          <MaterialCommunityIcons
-            style={styles.icon}
-            name="circle"
-            size={20}
-            color={colors.primary}
-          />
-        </View>
-      </View>
-      <AppText style={styles.text}>{itemData.food_description}</AppText>
-      <Separater />
+            <View style={styles.bottomRight}>
+              <AppText style={styles.price} numberOfLines={1}>
+                RM {menuData.customer_price}
+              </AppText>
+              <AppText style={styles.location} numberOfLines={1}>
+                Customer Price
+              </AppText>
+            </View>
+          </View>
 
-      <View style={styles.bottomArea}>
-        <View style={styles.bottomLeft}>
-          <AppButton
-            title="  Edit"
-            onPress={() => {
-              navigation.navigate(routes.MENU_EDIT_FOOD, {
-                itemData: itemData,
-              });
-            }}
-            color="secondary"
-            icon="lead-pencil"
-          />
-        </View>
+          <View style={styles.bottomArea}>
+            <View style={styles.bottomLeft}>
+              <AppText style={styles.location} numberOfLines={1}>
+                Vender Price
+              </AppText>
+              <AppText style={styles.price} numberOfLines={1}>
+                RM {menuData.vender_price}
+              </AppText>
+            </View>
 
-        <View style={styles.bottomRight}>
-          <AppButton
-            title="  Delete"
-            onPress={() => {
-              handleDelete(itemData);
-            }}
-            icon="delete"
-          />
-        </View>
-      </View>
-    </Screen>
+            <View style={styles.bottomRight}>
+              <AppText style={styles.price} numberOfLines={1}>
+                {menuData.discount_per} %
+              </AppText>
+              <AppText style={styles.location} numberOfLines={1}>
+                Discount
+              </AppText>
+            </View>
+          </View>
+
+          <View style={styles.bottomArea}>
+            <View style={styles.bottomLeft}>
+              <AppText style={styles.location} numberOfLines={1}>
+                Veg Status
+              </AppText>
+              <AppText style={styles.price} numberOfLines={1}>
+                {vegStaus(menuData.veg_status)}
+              </AppText>
+            </View>
+
+            <View style={styles.bottomRight}>
+              <AppText style={styles.price} numberOfLines={1}>
+                {activeStaus(menuData.active_status)}
+              </AppText>
+              <AppText style={styles.location} numberOfLines={1}>
+                Active Status
+              </AppText>
+            </View>
+          </View>
+          <Separater />
+          <View style={styles.bottomArea}>
+            <View style={styles.bottomLeft}>
+              <AppButton
+                title="  Edit"
+                onPress={() => {
+                  navigation.navigate(routes.MENU_EDIT_FOOD, {
+                    itemData: menuData,
+                  });
+                }}
+                color="secondary"
+                icon="lead-pencil"
+              />
+            </View>
+
+            <View style={styles.bottomRight}>
+              <AppButton
+                title="  Delete"
+                onPress={() => {
+                  handleDelete(menuData.id);
+                }}
+                icon="delete"
+              />
+            </View>
+          </View>
+        </Screen>
+      )}
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -237,10 +316,20 @@ const styles = StyleSheet.create({
   btnContainer: {
     padding: 5,
   },
+  price: {
+    fontSize: 18,
+    color: colors.primary,
+    fontWeight: "800",
+  },
 
   bottomArea: { flexDirection: "row" },
-  bottomLeft: { width: "50%", padding: 30 },
-  bottomRight: { width: "50%", flexDirection: "row-reverse", padding: 30 },
+  bottomLeft: { width: "50%", padding: 10 },
+  bottomRight: {
+    width: "50%",
+    flexDirection: "column-reverse",
+    justifyContent: "center",
+    padding: 10,
+  },
 });
 
 export default FoodViewScreen;

@@ -14,6 +14,7 @@ export default Object.freeze({
   SEARCH_DETAILS: "Food Details",
   MENU_ADD_FOOD: "Add New Menu",
   MENU_EDIT_FOOD: "Edit Menu",
+  MENU_IMAGE_UPLOAD: "Image Upload",
 
   ACCOUNT_PROFILE: "Profile",
   ACCOUNT_ADDRESS: "Address",
