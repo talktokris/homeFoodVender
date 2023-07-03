@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 //import * as Device from "expo-device";
 
 import HomeNavigator from "./HomeNavigator";
+import DeliveryNavigator from "./DeliveryNavigator";
 import FoodNavigator from "./FoodNavigator";
 import OrderNavigator from "./OrderNavigator";
 import AccountNavigator from "./AccountNavigator";
@@ -154,7 +155,31 @@ const AppNavigator = (color = "blue") => {
           // headerShown: false,
         }}
       />
-
+      <Tab.Screen
+        name="Delivery"
+        component={DeliveryNavigator}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="bike-fast"
+              color={color}
+              size={size}
+            />
+          ),
+          headerRight: () => (
+            <TopMenu
+              name="email"
+              onPress={() => console.log("hi")}
+              title="Update count"
+            />
+          ),
+          headerLeft: () => <IconBtn />,
+          headerTintColor: colors.lightGray,
+          headerStyle: {
+            backgroundColor: colors.lightGray,
+          },
+        }}
+      />
       <Tab.Screen
         name="Menu"
         component={FoodNavigator}

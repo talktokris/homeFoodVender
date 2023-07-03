@@ -8,7 +8,7 @@ import { LinkButton } from "./forms";
 
 import AppStatusText from "./forms/AppStatusText";
 
-function FoodOrderItem({
+function FoodDeliveryItem({
   id,
   title,
   subTitle,
@@ -66,6 +66,7 @@ function FoodOrderItem({
                       <AppStatusText
                         title={" " + orderStatus}
                         color="secondry"
+                        textColor="green"
                         onPress={() => {
                           // navigation.navigate(routes.AUTH_REGISTER);
                         }}
@@ -95,20 +96,40 @@ function FoodOrderItem({
               </View>
             </View>
             <View style={[styles.bottomArea, { paddingTop: 10 }]}>
-              <AppText style={styles.location} numberOfLines={5}>
-                <MaterialCommunityIcons
-                  style={styles.icon}
-                  name="map-marker"
-                  size={15}
-                  color={colors.primary}
-                />
-                {distance + " " + distanceUnit}
-                {deliveryAddres.address}
-              </AppText>
-              <AppText style={styles.location} numberOfLines={5}>
-                {deliveryAddres.street}, {deliveryAddres.city_name},{" "}
-                {deliveryAddres.state} {deliveryAddres.postal_code}
-              </AppText>
+              <View style={styles.bottomLeft}>
+                <AppText style={styles.location} numberOfLines={5}>
+                  <MaterialCommunityIcons
+                    style={styles.icon}
+                    name="map-marker"
+                    size={15}
+                    color={colors.primary}
+                  />
+                  {distance + " " + distanceUnit}
+                  {deliveryAddres.address}
+                </AppText>
+                <AppText style={styles.location} numberOfLines={5}>
+                  {deliveryAddres.street}, {deliveryAddres.city_name},{" "}
+                  {deliveryAddres.state} {deliveryAddres.postal_code}
+                </AppText>
+              </View>
+              <View style={styles.bottomRight}>
+                <>
+                  <View style={[styles.userInfo, { paddingTop: 5 }]}>
+                    <MaterialCommunityIcons
+                      style={styles.icon}
+                      name="account-circle-outline"
+                      size={18}
+                      color={colors.secondary}
+                    />
+                    <AppText
+                      style={[styles.total, { paddingLeft: 5 }]}
+                      numberOfLines={2}
+                    >
+                      {userInfo.first_name + " " + userInfo.last_name}
+                    </AppText>
+                  </View>
+                </>
+              </View>
             </View>
 
             <View style={styles.bottomArea}>
@@ -119,18 +140,18 @@ function FoodOrderItem({
                 ]}
               >
                 <LinkButton
-                  title="Accept Order"
-                  color="green"
-                  onPress={() => onPress(id)}
+                  title="On The Way"
+                  color="secondary"
+                  onPress={() => onPress(5, id)}
                 />
               </View>
 
-              <View style={[styles.bottomRight, { flexDirection: "row" }]}>
+              <View style={styles.bottomRight}>
                 <>
                   <View style={[styles.userInfo, { paddingTop: 5 }]}>
                     <MaterialCommunityIcons
                       style={styles.icon}
-                      name="account-circle-outline"
+                      name="bike-fast"
                       size={18}
                       color={colors.primary}
                     />
@@ -138,7 +159,8 @@ function FoodOrderItem({
                       style={[styles.total, { paddingLeft: 5 }]}
                       numberOfLines={2}
                     >
-                      {userInfo.first_name + " " + userInfo.last_name}
+                      Santosh Mahato
+                      {/* {userInfo.first_name + " " + userInfo.last_name} */}
                     </AppText>
                   </View>
                 </>
@@ -151,7 +173,7 @@ function FoodOrderItem({
   );
 }
 
-export default FoodOrderItem;
+export default FoodDeliveryItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -200,8 +222,8 @@ const styles = StyleSheet.create({
     fontWeight: "800",
   },
   bottomArea: { flexDirection: "row" },
-  bottomLeft: { width: "60%" },
-  bottomRight: { width: "40%", flexDirection: "row-reverse" },
+  bottomLeft: { width: "50%" },
+  bottomRight: { width: "50%", flexDirection: "row-reverse" },
   location: {
     fontSize: 14,
     paddingLeft: 10,

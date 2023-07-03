@@ -12,14 +12,14 @@ import routes from "../navigation/routes";
 import colors from "../config/colors";
 import Icon from "../components/Icon";
 
-import FoodOrderItem from "../components/FoodOrderItem";
+import FoodDeliveryItem from "../components/FoodDeliveryItem";
 import AppTextSearch from "../components/AppTextSearch";
 import orderApi from "../api/order";
 import AuthContext from "../auth/context";
 import { ErrorMessage } from "../components/forms";
 import settings from "../config/setting";
 
-function HomeScreen({ navigation }) {
+function DeliveryReadyScreen({ navigation }) {
   const [user, setUser] = useContext(AuthContext);
   const [totalAmount, setTotalAmount] = useState(0);
   const [isLoading, setLoading] = useState(false);
@@ -46,15 +46,14 @@ function HomeScreen({ navigation }) {
   }, [runStatus]);
 
   const getData = useCallback(() => {
-    const order_status = 1; // 1 means pending orders
-
     setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
     // useApi(resume.getResumeData, { currrentUser });
     orderApi
-      .getOrderByStatus(order_status)
+      .getOrderDeliverying()
       .then((data) => {
         if (data.ok) {
           //  setMenuData(data);
+          setEstatus(false);
           setLoading(false);
           setMenuData(data.data.data);
           // console.log(data.data.data);
@@ -83,21 +82,25 @@ function HomeScreen({ navigation }) {
     (c) => c.id == userData.default_address.id
   );
 
-  const handleAccept = (id) => {
-    Alert.alert("Accept Order", "Are you sure you want to accept the order?", [
-      {
-        text: "Yes",
-        onPress: () => onAccept(id),
-      },
-      { text: "No" },
-    ]);
+  const handleAccept = (order_status, id) => {
+    Alert.alert(
+      "Status Change",
+      "Are you sure you want to change the status?",
+      [
+        {
+          text: "Yes",
+          onPress: () => onAccept(order_status, id),
+        },
+        { text: "No" },
+      ]
+    );
   };
 
-  const onAccept = async (id) => {
-    const order_status = 2;
+  const onAccept = async (order_status, id) => {
+    //  const order_status = 2;
     const result = await orderApi.changeOrderStatus(order_status, id);
     // const tokenSet= result.access_token;
-    console.log(result.data);
+    // console.log(result.data);
 
     //console.log("==================");
     setLoading(false);
@@ -122,7 +125,7 @@ function HomeScreen({ navigation }) {
           text: "Ok",
           onPress: () => {
             setRunStatus(true);
-            navigation.navigate(routes.ORDERS_PENDING);
+            navigation.navigate(routes.ORDERS_ACTIVE);
           },
         },
       ]);
@@ -171,7 +174,7 @@ function HomeScreen({ navigation }) {
             data={menuData}
             keyExtractor={(message) => message.id.toString()}
             renderItem={({ item }) => (
-              <FoodOrderItem
+              <FoodDeliveryItem
                 id={item.id}
                 title={item.menu.food_title}
                 subTitle={item.menu.food_description}
@@ -203,25 +206,6 @@ function HomeScreen({ navigation }) {
     </>
   );
 }
-const styles = StyleSheet.create({
-  heading: {
-    fontWeight: "900",
-    fontSize: 19,
-    paddingBottom: 5,
-    color: colors.secondary,
-    paddingTop: 10,
-  },
-  image: {
-    width: "100%",
-    height: 180,
-    alignSelf: "center",
-  },
-  nav: {
-    flexDirection: "row",
-    textAlign: "center",
-    padding: 15,
-    justifyContent: "center",
-  },
-});
+const styles = StyleSheet.create({});
 
-export default HomeScreen;
+export default DeliveryReadyScreen;
