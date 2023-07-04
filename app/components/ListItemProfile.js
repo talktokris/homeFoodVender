@@ -6,6 +6,7 @@ import AppText from "./AppText";
 function ListItemProfile({
   title,
   subTitle,
+  handPhone,
   iconComponent,
   image,
   imgStatus,
@@ -30,6 +31,11 @@ function ListItemProfile({
           {subTitle && (
             <AppText style={styles.subTitle} numberOfLines={2}>
               {subTitle}
+            </AppText>
+          )}
+          {handPhone && (
+            <AppText style={styles.hp} numberOfLines={1}>
+              {handPhone}
             </AppText>
           )}
         </View>
@@ -60,6 +66,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   title: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: colors.secondary,
+  },
+  hp: {
     fontSize: 16,
     fontWeight: "600",
     color: colors.secondary,

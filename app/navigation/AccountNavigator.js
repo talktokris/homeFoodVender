@@ -10,9 +10,9 @@ import SearchRadiusScreen from "../screen/SearchRadiusScreen";
 import OrdersHistoryScreen from "../screen/OrdersHistoryScreen";
 import SupportScreen from "../screen/SupportScreen";
 import AccountPasswordScreen from "../screen/AccountPasswordScreen";
-import AddressScreen from "../screen/AddressScreen";
-import AddressAddScreen from "../screen/AddressAddScreen";
 import SalesStatementScreen from "../screen/SalesStatementScreen";
+import AddressScreen from "../screen/AddressScreen";
+
 
 const Stack = createNativeStackNavigator();
 

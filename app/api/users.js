@@ -22,4 +22,55 @@ const register = async (userInfo) => {
   };
 
 
-export default { register };
+const userProfileUpdate = async (first_name, last_name, email) => {
+  const result = await client.post("/client-profile-update", {
+    first_name,
+    last_name,
+    email,
+  });
+  //console.log(result.data);
+  return result;
+};
+
+const userPasswordChange = async (password, confirm_password) => {
+  const result = await client.post("/client-change-password", {
+    password: password,
+    c_password: confirm_password,
+  });
+  // console.log(result);
+  return result;
+};
+
+const userRefresh = async () => {
+  const result = await client.post("/profile-info");
+  // console.log(result.data);
+  return result;
+};
+
+const userAddressUpdate = async (
+  id,
+  address,
+  street,
+  city_name,
+  state,
+  postal_code
+) => {
+  const responce = await client.post("/vender-address-setup", {
+    id,
+    address,
+    street,
+    city_name,
+    state: state.title,
+    postal_code,
+  });
+  return responce;
+  // console.log(responce.ok);
+};
+
+export default {
+  register,
+  userRefresh,
+  userProfileUpdate,
+  userPasswordChange,
+  userAddressUpdate,
+};

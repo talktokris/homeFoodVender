@@ -21,6 +21,14 @@ const menuItems = [
     targetScreen: routes.ACCOUNT_PROFILE,
   },
   {
+    title: "Address",
+    icon: {
+      name: "map-marker",
+      backgroundColor: colors.secondary,
+    },
+    targetScreen: routes.ACCOUNT_ADDRESS,
+  },
+  {
     title: "Earning Statement",
     icon: {
       name: "format-list-bulleted-type",
@@ -56,13 +64,30 @@ const menuItems = [
 
 function AccountScreen({ route, navigation }) {
   const { user, logOut } = useAuth();
+  const userData = user.results[0];
+  var firstName = "";
+  var lastName = "";
+  var email = "";
+
+  if (userData.first_name != null) {
+    firstName = userData.first_name;
+  }
+
+  if (userData.last_name != null) {
+    lastName = userData.last_name;
+  }
+
+  if (userData.email != null) {
+    email = userData.email;
+  }
 
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
         <ListItemProfile
-          title="Full Name"
-          subTitle="test@domain.com"
+          title={firstName + " " + lastName}
+          subTitle={email}
+          handPhone={userData.country.zip_code + " " + userData.mobile_no}
           image={require("../assets/images/av.png")}
           imgStatus={null}
         />

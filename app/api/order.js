@@ -32,7 +32,7 @@ const changeOrderStatus = async (order_status, id) => {
 };
 
 const vederSalesHistory = async () => {
-  const result = await client.post("/client-order-histroy");
+  const result = await client.post("/vender-order-complited-history");
   // console.log(result);
   return result;
 };

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Image, View, TouchableOpacity, Alert } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -16,9 +16,8 @@ import {
 
 import colors from "../config/colors";
 import AppCheckBox from "../components/AppCheckBox";
-import AuthContext from "../auth/context";
 import routes from "../navigation/routes";
-import usersApi from "../api/users";
+import userApi from "../api/user";
 import ActivityIndicator from "../components/ActivityIndicator";
 
 const stateData = [
@@ -49,48 +48,13 @@ const validationSchema = Yup.object().shape({
     .label("Postal Code"),
 });
 
-function AddressScreen({ route, navigation }) {
-  const [user, setUser] = useContext(AuthContext);
+function AccountAddressScreen({ route, navigation }) {
+  const items = route.params.item;
+  //console.log(items.postal_code);
   const [error, setError] = useState();
   const [eStatus, setEstatus] = useState(false);
 
   const [isLoading, setLoading] = useState(false);
-  const items =
-    user.results[0].default_address != null
-      ? user.results[0].default_address
-      : [];
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getData();
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  const getData = useCallback(() => {
-    setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
-    usersApi
-      .userRefresh()
-      .then((data) => {
-        // console.log(data.data);
-        if (data.ok) {
-          setLoading(false);
-          setUser(data.data);
-          if (data.data.results[0].default_address != null) {
-            setDefaultAddress(data.data.results[0].default_address);
-          }
-        } else {
-          setError(
-            "Unable to get the database. Please check your internet connection"
-          );
-          setEstatus(true);
-        }
-      })
-      .catch((error) => {
-        // display error
-        setLoading(false); // stop the loader
-      });
-  }, []);
 
   const handleSubmit = async ({
     address,
@@ -101,7 +65,7 @@ function AddressScreen({ route, navigation }) {
   }) => {
     setLoading(true);
 
-    const result = await usersApi.userAddressUpdate(
+    const result = await userApi.userAddressUpdate(
       items.id,
       address,
       street,
@@ -125,13 +89,12 @@ function AddressScreen({ route, navigation }) {
       setEstatus(true);
       setError(result.data.message);
     } else if (result.data.success == true) {
-      getData();
       const { data: id, message: messageSend } = result.data;
 
       Alert.alert("Success", messageSend, [
         {
           text: "Ok",
-          onPress: () => navigation.navigate(routes.ACCOUNT_MENU),
+          onPress: () => navigation.navigate(routes.ACCOUNT_ADDRESS),
         },
       ]);
       // navigation.navigate(routes.PRO_DONE, {
@@ -145,15 +108,13 @@ function AddressScreen({ route, navigation }) {
     }
   };
 
-  //  console.log(defaultAddress);
-
   const stateSelectedItem = stateData.find((c) => c.title == items.state);
 
   return (
     <>
       <ActivityIndicator visible={isLoading} />
       <ErrorMessage error={error} visible={eStatus} />
-      {!isLoading && user && (
+      {!isLoading && (
         <Screen>
           <View style={styles.container}>
             <AppForm
@@ -230,7 +191,7 @@ function AddressScreen({ route, navigation }) {
                 color="primary"
                 icon="google-maps"
                 width="80%"
-                onSubmit={() => console.log("find location")}
+                onSubmit={() => console.log("register")}
               />
 
               <View style={styles.imageFrame}>
@@ -310,4 +271,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddressScreen;
+export default AccountAddressScreen;
