@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "homeFoodVender",
-    "slug": "homeFoodVender",
+    "name": "Home Food Service",
+    "slug": "home-food-service-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
@@ -18,16 +18,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.homefoodservicesbykris.homefoodservice",
+      "buildNumber": "1.0.0"
     },
     "android": {
+      "package": "com.homefoodservicesbykris.homefoodservice",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./app/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d359e464-570a-4cd6-8bf1-331692f54663"
+      }
+    },
+    "owner": "talktokris"
   }
 }

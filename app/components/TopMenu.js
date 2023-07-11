@@ -16,29 +16,8 @@ function TopMenu({
         onPress={() => console.log("Send OTP")}
       >
         <MaterialCommunityIcons
-          name="cart"
-          size={32}
-          color={colors.secondary}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.iconBg}
-        onPress={() => console.log("Send OTP")}
-      >
-        <MaterialCommunityIcons
           name="bell"
           size={32}
-          color={colors.secondary}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.iconBg}
-        onPress={() => console.log("Send OTP")}
-      >
-        <MaterialCommunityIcons
-          name="account-circle"
-          size={42}
           color={colors.secondary}
         />
       </TouchableOpacity>

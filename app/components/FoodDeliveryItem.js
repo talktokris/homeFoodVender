@@ -139,11 +139,11 @@ function FoodDeliveryItem({
                   { width: "50%", paddingLeft: 10, paddingRight: 5 },
                 ]}
               >
-                <LinkButton
+                {/* <LinkButton
                   title="On The Way"
                   color="secondary"
                   onPress={() => onPress(5, id)}
-                />
+                /> */}
               </View>
 
               <View style={styles.bottomRight}>
