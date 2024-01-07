@@ -12,7 +12,7 @@ function AppButtonSmall({ title, color = "primary", icon, onPress }) {
       <View>
         <Text style={styles.text}>
           {icon && (
-            <MaterialCommunityIcons name={icon} size={18} style={styles.icon} />
+            <MaterialCommunityIcons name={icon} size={15} style={styles.icon} />
           )}
           {title}
         </Text>
@@ -23,22 +23,20 @@ function AppButtonSmall({ title, color = "primary", icon, onPress }) {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 7,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    padding: 5,
-    width: "100%",
-    marginVertical: 5,
+    padding: 10,
+    width: "90%",
+    marginLeft: 5,
   },
   text: {
     color: colors.white,
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "bold",
   },
   icon: {
     color: colors.white,
-    margin: 30,
-    padding: 50,
   },
 });
 

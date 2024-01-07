@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, TextInput, StyleSheet, Platform, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
@@ -7,6 +7,12 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 function AppTextInput({ icon, lebel, width = "100%", ...otherProps }) {
   const refsFocus = useRef(null);
+
+  function getSpacingStyle() {
+    if (!icon) {
+      return { paddingLeft: 10 };
+    }
+  }
   return (
     <>
       <TouchableWithoutFeedback
@@ -21,12 +27,12 @@ function AppTextInput({ icon, lebel, width = "100%", ...otherProps }) {
               name={icon}
               size={20}
               style={styles.icon}
-              color={colors.secondary}
+              color={colors.medium}
             />
           )}
           <TextInput
-            placeholderTextColor={colors.secondary}
-            style={styles.textInput}
+            placeholderTextColor={styles.placeholder}
+            style={[styles.textInput, getSpacingStyle(icon)]}
             {...otherProps}
             ref={refsFocus}
           />
@@ -38,31 +44,32 @@ function AppTextInput({ icon, lebel, width = "100%", ...otherProps }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.lightGray,
+    // backgroundColor: colors.lightGray,
     borderWidth: 1,
-    borderColor: colors.secondary,
+    borderColor: colors.border,
     borderRadius: 10,
     flexDirection: "row",
-    padding: 8,
-    marginVertical: 10,
+    padding: 5,
+    marginBottom: 10,
+    marginTop: 5,
   },
   textInput: {
-    fontSize: 15,
+    fontSize: 14,
     fontFamily: Platform.OS === "android" ? fonts.android : fonts.ios,
     color: colors.secondary,
     width: "85%",
   },
+  placeholder: { color: "#eeeeee" },
   icon: {
     marginRight: 3,
     padding: Platform.OS === "android" ? 7 : 5,
   },
   lebel: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: Platform.OS === "android" ? fonts.android : fonts.ios,
-    fontWeight: "600",
+    fontWeight: "700",
     paddingTop: 10,
-    paddingLeft: 10,
-    color: colors.secondary,
+    color: colors.medium,
   },
 });
 

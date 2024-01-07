@@ -16,7 +16,7 @@ import FoodOrderItem from "../components/FoodOrderItem";
 import AppTextSearch from "../components/AppTextSearch";
 import orderApi from "../api/order";
 import AuthContext from "../auth/context";
-import { ErrorMessage } from "../components/forms";
+import { ErrorMessage, NormalMessage } from "../components/forms";
 import settings from "../config/setting";
 
 function HomeScreen({ navigation }) {
@@ -167,6 +167,9 @@ function HomeScreen({ navigation }) {
       <ErrorMessage error={error} visible={eStatus} />
       {!isLoading && menuData && (
         <Screen>
+          {menuData.length <= 0 && (
+            <NormalMessage visible={true} error="No orders in process" />
+          )}
           <FlatList
             data={menuData}
             keyExtractor={(message) => message.id.toString()}

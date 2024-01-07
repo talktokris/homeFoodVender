@@ -1,7 +1,18 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+} from "react";
 
-import { View, StyleSheet, FlatList } from "react-native";
-//import MessageItem from "../components/MessageItem";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+  Alert,
+} from "react-native";
 
 import Screen from "../components/Screen";
 import Separater from "../components/Separater";
@@ -10,125 +21,277 @@ import ActivityIndicator from "../components/ActivityIndicator";
 //import userUpdate from "../api/userUpdate";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
-import Icon from "../components/Icon";
-import settings from "../config/setting";
 
-import FoodItem from "../components/FoodItem";
 import AppTextSearch from "../components/AppTextSearch";
+import AppText from "../components/AppText";
+import AppButton from "../components/AppButton";
 import { ErrorMessage, LinkButton } from "../components/forms";
-import menuApi from "../api/menu";
 
-function FoodListingScreen({ navigation }) {
+import RestaurantInfo from "./RestaurantInfo";
+import FoodGridItem from "../components/FoodGridItem";
+
+import menuApi from "../api/menu";
+import useApi from "../hooks/useApi";
+import RetryComponent from "../components/RetryComponent";
+
+function FoodListingScreen({ route, navigation }) {
   const { user, logOut } = useAuth();
-  const currrentUser = user.id;
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState();
-  const [eStatus, setEstatus] = useState(false);
+
+  const currrentUser = user.results ? user.results[0].id : 0;
+  const fethcID = currrentUser;
+
   const [menuData, setMenuData] = useState([]);
+  const [memuFilttred, setMemuFilttred] = useState([]);
+  const [resultText, setResultText] = useState("");
+  const [restData, setRestData] = useState([]);
+  const [gHeight, setGHeight] = useState(0);
+
+  const onLayout = (event) => {
+    const { x, y, height, width } = event.nativeEvent.layout;
+    // if (gHeight <= 50) {
+    // setGHeight(width);
+    // }
+    // console.log(event.nativeEvent.layout);
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+  const getFetchData = useApi(menuApi.fetchSingleMenu);
+
+  const {
+    data: { vender: venderData = [], food: foodData = [] },
+    error,
+    loading,
+  } = getFetchData;
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getData();
-    });
-    return unsubscribe;
-  }, [navigation]);
-
-  const getData = useCallback(() => {
-    setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
-    // useApi(resume.getResumeData, { currrentUser });
-    menuApi
-      .fetchAllMenu()
-      .then((data) => {
-        if (data.ok) {
-          setMenuData(data);
-          setLoading(false);
-          setMenuData(data.data.results);
-          //  console.log(data.data.results);
-        } else {
-          setError(
-            "Unable to get the database. Please check your internet connection"
-          );
-          setEstatus(true);
-        }
-      })
-      .catch((error) => {
-        // display error
-        setLoading(false); // stop the loader
-      });
+    getFetchData.request(fethcID);
   }, []);
 
-  // Delete
+  useEffect(() => {
+    setRestData(venderData);
+    setMenuData(foodData);
+    setMemuFilttred(foodData);
+  }, [getFetchData.data]);
 
-  function makeUri(defID, imaData) {
-    // console.log(imaData.food_menu_id);
-    let imgUri = (imgUri = settings.imageUrl + "/menu/no_image.jpg");
+  // useEffect(() => {
+  //   setRestData(venderData);
+  //   setMenuData(foodData);
+  //   setMemuFilttred(foodData);
+  // }, [getFetchData.data, getFetchData.loading]);
 
-    if (imaData != null)
-      imgUri =
-        settings.imageUrl +
-        "/menu/" +
-        imaData.food_menu_id +
-        "/" +
-        imaData.image_name;
-    //  console.log(imgUri);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getFetchData.request(fethcID);
 
-    return imgUri;
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const onReTry = () => {
+    getFetchData.request(fethcID);
+  };
+
+  function roundFunction(amount) {
+    return parseFloat(amount).toFixed(0);
   }
+
+  const handleSearch = (searchQuery) => {
+    let filtered = menuData.filter((m) =>
+      m.food_title.toLowerCase().startsWith(searchQuery.toLowerCase())
+    );
+
+    if (searchQuery.length >= 1) {
+      setMemuFilttred(filtered);
+      if (filtered.length == 0) {
+        setResultText("No results found");
+      } else if (filtered.length == 1) {
+        setResultText(memuFilttred.length + " result found");
+      } else if (filtered.length <= 1) {
+        setResultText(filtered.length + " results found");
+      }
+    } else {
+      setResultText("");
+      setMemuFilttred(menuData);
+    }
+  };
 
   return (
     <>
-      <ActivityIndicator visible={isLoading} />
-      <ErrorMessage error={error} visible={eStatus} />
-      {!isLoading && menuData && (
-        <Screen>
-          <FlatList
-            data={menuData}
-            keyExtractor={(message) => message.id.toString()}
-            renderItem={({ item }) => (
-              <FoodItem
-                title={item.food_title}
-                subTitle={item.food_description}
-                //  image={item.image}
-                image={makeUri(item.menu_profile_img_id, item.default_image)}
-                price={item.vender_price}
-                distance={item.active_status}
-                distanceUnit={item.veg_status}
-                onPress={() => {
-                  // console.log(item.id);
-                  navigation.navigate(routes.SEARCH_DETAILS, {
-                    id: item.id,
-                  });
-                }}
-                // onPress={() => navigation.navigate(routes.AC_MESAGES_VIEW, item)}
-                renderRightActions={() => (
-                  <View style={{ backgroundColor: "red", height: 70 }}></View>
-                )}
-              />
-            )}
-            ItemSeparatorComponent={Separater}
+      <ActivityIndicator visible={loading} />
+      <Screen>
+        {error ? (
+          <RetryComponent
+            onPress={onReTry}
+            message=" Couldn't retrieve the orders."
           />
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onReTry} />
+            }
+          >
+            {restData.length >= 1 && <RestaurantInfo restData={restData} />}
+            <AppText style={styles.heading}> For you </AppText>
+            <Separater />
 
-          <View style={styles.buttonContainer}>
-            <LinkButton
-              title=" Add New Menu"
-              color="secondary"
-              icon="food"
-              onPress={() => {
-                // console.log("Hi");
-                navigation.navigate(routes.MENU_ADD_FOOD);
-              }}
-              width="90"
-            />
-          </View>
-        </Screen>
-      )}
+            <View style={styles.searchBox}>
+              <AppTextSearch
+                name="words"
+                autoCapitalize="none"
+                autoCorrect={false}
+                icon="magnify"
+                textContentType="jobTitle"
+                placeholder="Search here"
+                onPress={handleSearch}
+                // onChange={(e) => handleSearch(e)}
+                //  onChange={(e) => console.log(e.nativeEvent.text)}
+              />
+              <AppText style={styles.searchHeading}>{resultText}</AppText>
+            </View>
+            <View
+              onLayout={onLayout}
+              style={[styles.gridContainer, { flex: 1, minHeight: gHeight }]}
+            >
+              {memuFilttred.map((item) => (
+                <FoodGridItem
+                  key={item.id.toString()}
+                  id={item.id}
+                  venderId={item.user_id}
+                  category={item.food_category}
+                  title={item.food_title}
+                  price={item.customer_price}
+                  oldPrice={item.vender_price}
+                  //image={item.image}
+                  image={item.image_name}
+                  discount={item.discount_per}
+                  onPress={() => {
+                    navigation.navigate(routes.FOOD_OPTIONS, {
+                      item: item,
+                      vender: restData,
+                    });
+                  }}
+                  // onPress={() => navigation.navigate(routes.AC_MESAGES_VIEW, item)}
+                  renderRightActions={() => (
+                    <View style={{ backgroundColor: "red", height: 70 }}></View>
+                  )}
+                />
+              ))}
+            </View>
+          </ScrollView>
+        )}
+      </Screen>
     </>
   );
 }
 const styles = StyleSheet.create({
-  buttonContainer: {
-    padding: 10,
+  logoContainer: { justifyContent: "center" },
+
+  heading: {
+    fontWeight: "900",
+    fontSize: 16,
+    paddingLeft: 25,
+    paddingBottom: 10,
+    paddingTop: 10,
+    color: colors.secondary,
+  },
+
+  searchHeading: {
+    fontWeight: "900",
+    fontSize: 14,
+    paddingLeft: 25,
+    paddingBottom: 5,
+    paddingTop: 5,
+    color: colors.secondary,
+    textAlign: "center",
+  },
+
+  image: {
+    alignSelf: "center",
+    width: "100%",
+    height: 150,
+    resizeMode: "contain",
+    borderRadius: 5,
+    margin: 5,
+    marginLeft: 10,
+  },
+  restContainer: {
+    marginLeft: 15,
+    marginRight: 15,
+    backgroundColor: "#f7f7f7",
+    shadowColor: "#c4c2c2",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    marginBottom: 10,
+    borderColor: colors.separator,
+    borderWidth: 1,
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  restItem: {
     flexDirection: "row",
+    paddingTop: 10,
+    PaddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.separator,
+  },
+  restItemContainer: { flex: 1 },
+  icon: {
+    marginTop: 10,
+  },
+  nav: {
+    flexDirection: "row",
+    textAlign: "center",
+    padding: 15,
+    justifyContent: "center",
+  },
+  text: {
+    fontSize: 18,
+    padding: 10,
+  },
+  itemArea: {
+    flexDirection: "row",
+    padding: 15,
+    justifyContent: "center",
+  },
+  item: {
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  itemInput: {
+    width: 40,
+    height: 40,
+    border: 2,
+    padding: 7,
+    borderRadius: 4,
+    borderColor: colors.secondary,
+    backgroundColor: colors.lightGray,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  btnContainer: {
+    padding: 5,
+  },
+  price: {
+    fontSize: 18,
+    color: colors.primary,
+    fontWeight: "800",
+  },
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-evenly",
+  },
+  searchBox: { marginLeft: 15, marginTop: 10, marginRight: 15 },
+  bottomArea: { flexDirection: "row" },
+  bottomLeft: { width: "50%", padding: 10 },
+  bottomRight: {
+    width: "50%",
+    flexDirection: "column-reverse",
+    justifyContent: "center",
+    padding: 10,
   },
 });
 

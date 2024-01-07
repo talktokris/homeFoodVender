@@ -170,9 +170,10 @@ function AddressScreen({ route, navigation }) {
               <View style={styles.inputContainer}>
                 <AppFormField
                   name="address"
+                  lebel="Building Name"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  placeholder="Building Name"
+                  placeholder="Building"
                   textContentType="name"
                   secureTextEntry={false}
                   maxLength={150}
@@ -180,9 +181,10 @@ function AddressScreen({ route, navigation }) {
 
                 <AppFormField
                   name="street"
+                  lebel="Street Name"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  placeholder=" Street Name"
+                  placeholder="Street"
                   textContentType="name"
                   secureTextEntry={false}
                   maxLength={150}
@@ -190,6 +192,7 @@ function AddressScreen({ route, navigation }) {
                 <AppFormPicker
                   items={stateData}
                   name="state"
+                  lebel="State Name"
                   /* numberOfColumns={2} */
                   /* PickerItemComponent={PickerItem} */
 
@@ -201,10 +204,11 @@ function AddressScreen({ route, navigation }) {
               <View style={styles.otp}>
                 <View style={styles.viewHalf}>
                   <AppFormField
+                    lebel="City Name"
                     name="city_name"
                     autoCapitalize="none"
                     autoCorrect={false}
-                    placeholder=" City Name"
+                    placeholder="City"
                     textContentType="name"
                     secureTextEntry={false}
                     maxLength={100}
@@ -212,6 +216,7 @@ function AddressScreen({ route, navigation }) {
                 </View>
                 <View style={styles.viewHalf}>
                   <AppFormField
+                    lebel="Postal Code"
                     name="postal_code"
                     autoCapitalize="none"
                     autoCorrect={false}

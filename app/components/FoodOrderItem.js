@@ -15,7 +15,6 @@ function FoodOrderItem({
   price,
   qty,
   total_amount,
-  order_status,
   deliveryAddres,
   userInfo,
   currency = "RM ",
@@ -212,7 +211,7 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "right",
+    justifyContent: "center",
     paddingLeft: 10,
   },
 });

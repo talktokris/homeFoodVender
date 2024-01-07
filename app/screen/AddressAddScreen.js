@@ -68,6 +68,7 @@ function AddressAddScreen({ navigation }) {
           <View style={styles.inputContainer}>
             <AppFormField
               name="firstName"
+              lebel="hi"
               autoCapitalize="none"
               autoCorrect={false}
               placeholder=" Building Name"

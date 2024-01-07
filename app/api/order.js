@@ -4,20 +4,26 @@ import client from "./client";
 
 //return register
 
-const getOrderByStatus = async (order_status) => {
-  const result = await client.post("/vender-order-records", { order_status });
+const getOrderPending = async (data) => {
+  const result = await client.post("/vender-order-pending", {
+    order_status: data.order_status,
+  });
+  // console.log(order_status);
+  return result;
+};
+
+const getOrderRunning = async (data) => {
+  const result = await client.post("/vender-order-running", {
+    order_status: data.order_status,
+  });
   // console.log(result);
   return result;
 };
 
-const getOrderRunning = async (order_status) => {
-  const result = await client.post("/vender-order-running");
-  // console.log(result);
-  return result;
-};
-
-const getOrderDeliverying = async () => {
-  const result = await client.post("/vender-order-ready-to-deliver");
+const getOrderDeliverying = async (data) => {
+  const result = await client.post("/vender-order-ready-to-deliver", {
+    order_status: data.order_status,
+  });
   // console.log(result);
   return result;
 };
@@ -44,7 +50,7 @@ const vederEarningStatement = async () => {
 };
 
 export default {
-  getOrderByStatus,
+  getOrderPending,
   getOrderRunning,
   getOrderDeliverying,
   changeOrderStatus,

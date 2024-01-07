@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     // borderBottomRightRadius: 10,
     // borderTopRightRadius: 10,
   },
+
 });
 
 export default AppTextSearch;

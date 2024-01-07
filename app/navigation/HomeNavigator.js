@@ -7,10 +7,24 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screen/HomeScreen";
 import OrdersActiveScreen from "../screen/OrdersActiveScreen";
 
+
+import HeaderTop from "../components/HeaderTop";
 const Stack = createNativeStackNavigator();
 
 const HomeNavigator = () => (
-  <Stack.Navigator mode="modal">
+  <Stack.Navigator
+    mode="modal"
+    screenOptions={{
+      lazy: false,
+      headerShown: true,
+      height: 250,
+      backgroundColor: "#111",
+      headerMode: "screen",
+      animation: "fade",
+
+      header: (props) => <HeaderTop style="light" {...props} />,
+    }}
+  >
     <Stack.Screen name="Services on Process" component={OrdersActiveScreen} />
   </Stack.Navigator>
 );

@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: 15,
     width: "100%",
     marginVertical: 10,
   },
   text: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
   },
   icon: {

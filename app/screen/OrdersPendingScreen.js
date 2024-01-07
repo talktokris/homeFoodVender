@@ -1,49 +1,48 @@
-import React, { useState, useCallback, useEffect, useContext } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
-import { View, StyleSheet, FlatList, Alert } from "react-native";
-//import MessageItem from "../components/MessageItem";
+import { View, StyleSheet, ScrollView, RefreshControl } from "react-native";
 
 import Screen from "../components/Screen";
-import Separater from "../components/Separater";
 
 import ActivityIndicator from "../components/ActivityIndicator";
-//import userUpdate from "../api/userUpdate";
+import { ErrorMessage } from "../components/forms";
+import AppText from "../components/AppText";
+import RestaurantOrderInfo from "./RestaurantOrderInfo";
+
 import routes from "../navigation/routes";
 import colors from "../config/colors";
-import Icon from "../components/Icon";
 
-import FoodOrderItem from "../components/FoodOrderItem";
-import AppTextSearch from "../components/AppTextSearch";
 import orderApi from "../api/order";
-import AuthContext from "../auth/context";
-import { ErrorMessage } from "../components/forms";
-import settings from "../config/setting";
+import useApi from "../hooks/useApi";
+import AppButton from "../components/AppButton";
+import RetryComponent from "../components/RetryComponent";
 
 function OrdersPendingScreen({ navigation }) {
-  const [user, setUser] = useContext(AuthContext);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState();
-  const [eStatus, setEstatus] = useState(false);
-  const [menuData, setMenuData] = useState([]);
-  const [runStatus, setRunStatus] = useState(false);
+  const [orderData, setOrderData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const getOrders = useApi(orderApi.getOrderPending);
 
-  //const { user, logOut } = useAuth();
-  //const currrentUser = user.id;
+  const {
+    data: { data: getDataSet = [] },
+    error,
+    result,
+    loading,
+  } = getOrders;
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getData();
-    });
-    return unsubscribe;
-  }, [navigation]);
+  const postData = { order_status: 0 };
 
   useEffect(() => {
-    if (runStatus == true) {
-      getData();
-      setRunStatus(false);
-    }
-  }, [runStatus]);
+    getOrders.request(postData);
+  }, []);
+
+  const onRefresh = () => {
+    getOrders.request(postData);
+    setRefreshing(true);
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  };
 
   const getData = useCallback(() => {
     const order_status = 1; // 1 means pending orders
@@ -72,9 +71,7 @@ function OrdersPendingScreen({ navigation }) {
   }, []);
 
   // Delete
-
-  const userData = user.results[0];
-  //console.log(userData.default_address.id);
+  /*
 
   function seletedAddress(data) {
     d.id == userData.default_address.id;
@@ -161,49 +158,105 @@ function OrdersPendingScreen({ navigation }) {
     return stateSelectedItem.title;
     // console.log(stateSelectedItem);
   }
-
+*/
   return (
     <>
-      <ActivityIndicator visible={isLoading} />
-      <ErrorMessage error={error} visible={eStatus} />
-      {!isLoading && menuData && (
-        <Screen>
-          <FlatList
-            data={menuData}
-            keyExtractor={(message) => message.id.toString()}
-            renderItem={({ item }) => (
-              <FoodOrderItem
-                id={item.id}
-                title={item.menu.food_title}
-                subTitle={item.menu.food_description}
-                image={makeUri(
-                  item.menu.default_image.food_menu_id,
-                  item.menu.default_image
-                )}
-                price={item.customer_price}
-                qty={item.qty}
-                total_amount={item.total_amount}
-                order_status={item.order_status}
-                deliveryAddres={item.delivery}
-                userInfo={item.user}
-                distance={1}
-                distanceUnit="KM -"
-                orderStatus={statusTextOrder(item.order_status)}
-                paymentStatus={statusTextPayment(item.payment_type)}
-                onPress={handleAccept}
-                // onPress={() => navigation.navigate(routes.AC_MESAGES_VIEW, item)}
-                renderRightActions={() => (
-                  <View style={{ backgroundColor: "red", height: 70 }}></View>
-                )}
-              />
-            )}
-            ItemSeparatorComponent={Separater}
+      <ActivityIndicator visible={loading} />
+
+      <Screen>
+        {error ? (
+          <RetryComponent
+            onPress={() => getOrders.request(postData)}
+            message=" Couldn't retrieve the orders."
           />
-        </Screen>
-      )}
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={() => getOrders.request(postData)}
+              />
+            }
+          >
+            {getDataSet.length >= 1 ? (
+              <View>
+                {getDataSet.map((item) => (
+                  <RestaurantOrderInfo
+                    key={item.id.toString()}
+                    id={item.id}
+                    vData={item.vender}
+                    oData={item.orders}
+                    tPrice={item.customer_amount}
+                    onDelete={() => console.log("Delete Clicked")}
+                    onAddItem={(foodId) => {
+                      navigation.navigate(routes.HOME_FOOD_DETAILS, {
+                        // id: item.id,
+                        foodId: foodId,
+                        itemData: item,
+                        venderId: item.id,
+                        type: "list",
+                      });
+                    }}
+                    onChecOut={() => {
+                      // console.log("Hi Checkout " + item.id);
+                      navigation.navigate(routes.PLACE_ORDER, {
+                        venderId: item.id,
+                        data: item,
+                      });
+                    }}
+                  />
+                ))}
+              </View>
+            ) : (
+              <View style={styles.noItemBox}>
+                <AppText style={styles.noItemText}>No Orders found</AppText>
+              </View>
+            )}
+          </ScrollView>
+        )}
+      </Screen>
     </>
   );
 }
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    position: "relative",
+    marginVertical: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  innterContainer: {
+    flexDirection: "row",
+    marginVertical: 10,
+  },
+  left: { width: "60%" },
+  right: { width: "40%" },
+  lebel: {
+    fontSize: 22,
+    color: colors.secondary,
+    fontWeight: "800",
+  },
+  lebelSm: {
+    fontSize: 14,
+    color: colors.secondary,
+    fontWeight: "800",
+  },
+  price: {
+    fontSize: 22,
+    color: colors.primary,
+    fontWeight: "800",
+  },
+  noItemBox: {
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingVertical: 20,
+  },
+  noItemText: {
+    fontWeight: "600",
+    fontSize: 14,
+    color: colors.medium,
+  },
+});
 
 export default OrdersPendingScreen;

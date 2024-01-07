@@ -1,29 +1,16 @@
 export default {
-  serverUrl: "https://homefood.com.my/backend",
-  apiUrl: "https://homefood.com.my/backend/api",
-  imageUrl: "https://homefood.com.my/backend/vender_images",
-};
+  // serverUrl: "https://homefood.com.my/backend",
+  // apiUrl: "https://homefood.com.my/backend/api",
+  // imageUrl: "https://homefood.com.my/backend/vender_images",
 
-/* Live settings
-
-
-  serverUrl: "https://stjobagency.com/",
-  apiUrl: "https://stjobagency.com/backend_api/api",
-  imageUrl: "https://stjobagency.com/assets/images/",
-
-
-
-    serverUrl: "http://localhost/prabhu_jobs/web-app/backend/public",
-  apiUrl: "http://localhost/prabhu_jobs/web-app/backend/public/api",
+  serverUrl:
+    "http://192.168.254.1/projects/homefood/backend/homefood-backend/public",
+  apiUrl:
+    "http://192.168.254.1/projects/homefood/backend/homefood-backend/public/api",
   imageUrl:
-    "http://localhost/prabhu_jobs/web-app/backend/public/assets/images/",
-
-
-
-*/
-
+    "http://192.168.254.1/projects/homefood/backend/homefood-backend/public/vender_images",
+};
 /*
-import { Constants } from "expo-constants";
 
 const settings = {
   dev: {

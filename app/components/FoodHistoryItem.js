@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   userInfo: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "right",
+    justifyContent: "center",
     paddingLeft: 10,
   },
 });

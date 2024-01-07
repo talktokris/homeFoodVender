@@ -12,10 +12,24 @@ import FoodEditScreen from "../screen/FoodEditScreen";
 import ComplitedScreen from "../screen/ComplitedScreen";
 import ImageUplaodScreen from "../screen/ImageUplaodScreen";
 
+import HeaderTop from "../components/HeaderTop";
+
 const Stack = createNativeStackNavigator();
 
 const FoodNavigator = () => (
-  <Stack.Navigator mode="modal">
+  <Stack.Navigator
+    mode="modal"
+    screenOptions={{
+      lazy: false,
+      headerShown: true,
+      height: 250,
+      backgroundColor: "#111",
+      headerMode: "screen",
+      animation: "fade",
+
+      header: (props) => <HeaderTop style="light" {...props} />,
+    }}
+  >
     <Stack.Screen name="Food Menu" component={FoodListingScreen} />
     <Stack.Screen name="Food Details" component={FoodViewScreen} />
     <Stack.Screen name="Add New Menu" component={FoodAddScreen} />

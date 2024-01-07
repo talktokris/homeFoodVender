@@ -1,6 +1,7 @@
-import react, { useEffect } from "react";
+import { Platform } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Constants from "expo-constants";
 //import * as Notifications from "expo-notifications";
 //import * as Device from "expo-device";
 
@@ -9,10 +10,12 @@ import DeliveryNavigator from "./DeliveryNavigator";
 import FoodNavigator from "./FoodNavigator";
 import OrderNavigator from "./OrderNavigator";
 import AccountNavigator from "./AccountNavigator";
+
 import colors from "../config/colors";
-import Icon from "../components/Icon";
 import TopMenu from "../components/TopMenu";
 import IconBtn from "../components/IconBtn";
+import MessageIconAlert from "../components/MessageIconAlert";
+import HeaderTop from "../components/HeaderTop";
 
 //import userUpdate from "../api/userUpdate";
 //import useAuth from "../auth/useAuth";
@@ -101,9 +104,17 @@ const AppNavigator = (color = "blue") => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.secondary,
+        tabBarActiveTintColor: colors.bottomNavActiveMenu,
+        tabBarInactiveTintColor: colors.bottomNavMenu,
         tabBarLabelStyle: { fontWeight: "600", fontSize: 14 },
+        headerShown: false,
+        tabBarStyle: {
+          height: Platform.OS === "android" ? 60 : 95,
+        },
+        tabBarItemStyle: {
+          marginBottom: 8,
+          paddingTop: 5,
+        },
       }}
     >
       <Tab.Screen
@@ -113,17 +124,21 @@ const AppNavigator = (color = "blue") => {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
           ),
-          headerRight: () => (
-            <TopMenu
-              name="email"
-              onPress={() => console.log("hi")}
-              title="Update count"
-            />
-          ),
-          headerLeft: () => <IconBtn />,
+          // headerRight: () => (
+          //   <TopMenu
+          //     name="email"
+          //     onPress={() => console.log("hi")}
+          //     title="Update count"
+          //   />
+          // ),
+          // headerLeft: () => <IconBtn />,
           headerTintColor: colors.lightGray,
           headerStyle: {
             backgroundColor: colors.lightGray,
+          },
+          headerTitleStyle: {
+            fontSize: 10,
+            textAlign: "center",
           },
         }}
       />
@@ -166,14 +181,15 @@ const AppNavigator = (color = "blue") => {
               size={size}
             />
           ),
-          headerRight: () => (
-            <TopMenu
-              name="email"
-              onPress={() => console.log("hi")}
-              title="Update count"
-            />
-          ),
-          headerLeft: () => <IconBtn />,
+          // headerRight: () => (
+          // //   <TopMenu
+          // //     name="email"
+          // //     onPress={() => console.log("hi")}
+          // //     title="Update count"
+          // //   />
+          // // ),
+          // // headerLeft: () => <IconBtn />,
+
           headerTintColor: colors.lightGray,
           headerStyle: {
             backgroundColor: colors.lightGray,
@@ -191,14 +207,14 @@ const AppNavigator = (color = "blue") => {
               size={size}
             />
           ),
-          headerRight: () => (
-            <TopMenu
-              name="email"
-              onPress={() => console.log("hi")}
-              title="Update count"
-            />
-          ),
-          headerLeft: () => <IconBtn />,
+          // headerRight: () => (
+          //   <TopMenu
+          //     name="email"
+          //     onPress={() => console.log("hi")}
+          //     title="Update count"
+          //   />
+          // ),
+          // headerLeft: () => <IconBtn />,
           headerTintColor: colors.lightGray,
           headerStyle: {
             backgroundColor: colors.lightGray,
@@ -213,14 +229,14 @@ const AppNavigator = (color = "blue") => {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
           ),
-          headerRight: () => (
-            <TopMenu
-              name="email"
-              onPress={() => console.log("hi")}
-              title="Update count"
-            />
-          ),
-          headerLeft: () => <IconBtn />,
+          // headerRight: () => (
+          //   <TopMenu
+          //     name="email"
+          //     onPress={() => console.log("hi")}
+          //     title="Update count"
+          //   />
+          // ),
+          // headerLeft: () => <IconBtn />,
           headerTintColor: colors.lightGray,
           headerStyle: {
             backgroundColor: colors.lightGray,

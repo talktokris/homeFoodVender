@@ -17,8 +17,8 @@ function TopMenu({
       >
         <MaterialCommunityIcons
           name="bell"
-          size={32}
-          color={colors.secondary}
+          size={27}
+          color={colors.statusbarTextColor}
         />
       </TouchableOpacity>
     </View>

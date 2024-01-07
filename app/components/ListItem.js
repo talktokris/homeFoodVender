@@ -36,8 +36,8 @@ export default ListItem;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    padding: 12,
-    backgroundColor: colors.light,
+    padding: 15,
+    // backgroundColor: colors.light,
     alignItems: "center",
   },
   appTextContainer: {
@@ -46,17 +46,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
     borderRadius: 50,
     marginRight: 10,
   },
   title: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600",
   },
   subTitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.secondary,
   },
 });
