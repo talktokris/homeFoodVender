@@ -16,7 +16,7 @@ export default {
   separator: "#CCCCCC",
   light: "#EEEEEE",
   chatme: "#57606f",
-  blueRibbon: "306EFF",
+  blueRibbon: "#306EFF",
   skyBlue: "#87CEEB",
   price: "#888888",
   border: "#E2E2E2",

@@ -7,7 +7,7 @@ import Screen from "../components/Screen";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { ErrorMessage } from "../components/forms";
 import AppText from "../components/AppText";
-import RestaurantOrderInfo from "./RestaurantOrderInfo";
+import RestaurantOrderProcess from "./RestaurantOrderProcess";
 
 import routes from "../navigation/routes";
 import colors from "../config/colors";
@@ -29,7 +29,7 @@ function OrdersActiveScreen({ navigation }) {
     loading,
   } = getOrders;
 
-  const postData = { order_status: 0 };
+  const postData = { order_status: 3 };
 
   useEffect(() => {
     getOrders.request(postData);
@@ -43,7 +43,7 @@ function OrdersActiveScreen({ navigation }) {
       setRefreshing(false);
     }, 2000);
   };
-
+  /*
   const getData = useCallback(() => {
     const order_status = 1; // 1 means pending orders
 
@@ -69,7 +69,7 @@ function OrdersActiveScreen({ navigation }) {
         setLoading(false); // stop the loader
       });
   }, []);
-
+*/
   // Delete
   /*
 
@@ -182,29 +182,14 @@ function OrdersActiveScreen({ navigation }) {
             {getDataSet.length >= 1 ? (
               <View>
                 {getDataSet.map((item) => (
-                  <RestaurantOrderInfo
+                  <RestaurantOrderProcess
                     key={item.id.toString()}
                     id={item.id}
                     vData={item.vender}
                     oData={item.orders}
+                    orderStatus={item.order_string_value}
                     tPrice={item.customer_amount}
-                    onDelete={() => console.log("Delete Clicked")}
-                    onAddItem={(foodId) => {
-                      navigation.navigate(routes.HOME_FOOD_DETAILS, {
-                        // id: item.id,
-                        foodId: foodId,
-                        itemData: item,
-                        venderId: item.id,
-                        type: "list",
-                      });
-                    }}
-                    onChecOut={() => {
-                      // console.log("Hi Checkout " + item.id);
-                      navigation.navigate(routes.PLACE_ORDER, {
-                        venderId: item.id,
-                        data: item,
-                      });
-                    }}
+                    onAction={(id, value) => console.log(id + " - " + value)}
                   />
                 ))}
               </View>

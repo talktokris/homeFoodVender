@@ -24,6 +24,15 @@ const getOrderDeliverying = async (data) => {
   const result = await client.post("/vender-order-ready-to-deliver", {
     order_status: data.order_status,
   });
+  // console.log(data);
+  return result;
+};
+
+const changeSalesStatus = async (saleId, order_status) => {
+  const result = await client.post("/vender-sales-change-status", {
+    sales_id: saleId,
+    status_value: order_status,
+  });
   // console.log(result);
   return result;
 };
@@ -53,6 +62,7 @@ export default {
   getOrderPending,
   getOrderRunning,
   getOrderDeliverying,
+  changeSalesStatus,
   changeOrderStatus,
   vederSalesHistory,
   vederEarningStatement,

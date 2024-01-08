@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   Text,
+  Alert,
 } from "react-native";
 import colors from "../config/colors";
 import AppText from "./AppText";
@@ -15,8 +16,9 @@ import settings from "../config/setting";
 import Price from "../components/Price";
 import VegStatus from "../components/VegStatus";
 import CatHalal from "../components/CatHalal";
+import AppButtonSmall from "./AppButtonSmall";
 
-function OrderItemRecent({
+function OrderItemProcess({
   id,
   sn,
   venderId,
@@ -25,7 +27,8 @@ function OrderItemRecent({
   tPrice,
   extra,
   image,
-  onDelete,
+  statusData,
+  onAction,
 }) {
   const [extraData, setExtraData] = useState([]);
 
@@ -49,7 +52,6 @@ function OrderItemRecent({
     return unique;
   }
   // console.log(extra.length);
-  // console.log(exPrice);
 
   const setData = () => {
     let headArray = [];
@@ -74,8 +76,7 @@ function OrderItemRecent({
 
     setExtraData(newArray);
   };
-
-  // console.log(extraData[0].data);
+  //   console.log(statusData);
   return (
     <>
       <View style={styles.content}>
@@ -101,28 +102,20 @@ function OrderItemRecent({
 
             <View style={styles.status}>
               <AppText style={styles.statusLebel}>Status : </AppText>
-              <AppText style={styles.statusValue}> Pending</AppText>
+
+              {statusData.sting_value && (
+                <AppText style={styles.statusValue}>
+                  {statusData.sting_value}
+                </AppText>
+              )}
             </View>
           </View>
-          <View style={styles.vListContainer}>
+          <View style={styles.vOrderContainer}>
             <View style={styles.orderView}>
               <AppText style={styles.statusLebel}>Item ID : </AppText>
               <AppText style={styles.orderNo}> {id}</AppText>
             </View>
           </View>
-        </View>
-        <View style={styles.delBtn}>
-          <TouchableHighlight
-            underlayColor={colors.lightGray}
-            onPress={() => onDelete()}
-          >
-            <MaterialCommunityIcons
-              style={styles.icon}
-              name="bike-fast"
-              size={30}
-              color={colors.medium}
-            />
-          </TouchableHighlight>
         </View>
       </View>
 
@@ -132,6 +125,24 @@ function OrderItemRecent({
         </View>
 
         <View style={[styles.appTextContainer, { width: "90%" }]}>
+          <View style={styles.actionContainer}>
+            <View>
+              <AppButtonSmall
+                color="blueRibbon"
+                styleProps={{ width: 120, margin: 0 }}
+                title="Start Cooking"
+                onPress={() => onAction(id, 5)}
+              />
+            </View>
+            <View>
+              <AppButtonSmall
+                color="green"
+                styleProps={{ width: 120, margin: 0 }}
+                title="Food Ready"
+                onPress={() => onAction(id, 6)}
+              />
+            </View>
+          </View>
           <View style={styles.addOnContainer}>
             {extraData.map((ex) => (
               <View style={styles.addOn} key={ex.id.toString()}>
@@ -156,7 +167,7 @@ function OrderItemRecent({
   );
 }
 
-export default OrderItemRecent;
+export default OrderItemProcess;
 
 const styles = StyleSheet.create({
   image: {
@@ -178,14 +189,13 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: "row",
     // backgroundColor: "ffffff",
-    marginTop: 30,
   },
   contentEx: {
     flexDirection: "row",
     // backgroundColor: "ffffff",
   },
   appTextContainer: {
-    width: "62%",
+    width: "70%",
     alignItems: "flex-start",
   },
   snTextBox: { alignItems: "center", width: 20 },
@@ -244,12 +254,29 @@ const styles = StyleSheet.create({
     color: colors.medium,
     fontWeight: "900",
   },
-  orderView: { flexDirection: "row" },
+  orderView: { flexDirection: "row", width: "50%" },
   orderNo: {
     fontSize: 12,
     backgroundColor: "#ccc",
     fontWeight: "800",
     paddingHorizontal: 10,
     marginLeft: 10,
+  },
+  orderAction: {
+    width: "50%",
+    alignItems: "flex-end",
+  },
+  vOrderContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+  },
+  actionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    borderTopWidth: 1,
+    borderColor: "#dedede",
+    borderBottomWidth: 1,
+    padding: 10,
   },
 });

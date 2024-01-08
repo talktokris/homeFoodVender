@@ -3,10 +3,16 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../config/colors";
-function AppButtonSmall({ title, color = "primary", icon, onPress }) {
+function AppButtonSmall({
+  title,
+  color = "primary",
+  styleProps,
+  icon,
+  onPress,
+}) {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: colors[color] }]}
+      style={[styles.button, { backgroundColor: colors[color] }, styleProps]}
       onPress={onPress}
     >
       <View>

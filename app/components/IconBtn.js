@@ -4,22 +4,16 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
 
 function IconBtn({
-  name,
+  name = "email",
   size = 32,
   backgroundColor = "#000",
   iconColor = "#fff",
+  onPress,
 }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.iconBg}
-        onPress={() => console.log("Send OTP")}
-      >
-        <MaterialCommunityIcons
-          name="email"
-          size={32}
-          color={colors.secondary}
-        />
+      <TouchableOpacity style={styles.iconBg} onPress={onPress}>
+        <MaterialCommunityIcons name={name} size={size} color={iconColor} />
       </TouchableOpacity>
     </View>
   );

@@ -29,7 +29,7 @@ function DeliveryReadyScreen({ navigation }) {
     loading,
   } = getOrders;
 
-  const postData = { order_status: 0 };
+  const postData = { order_status: 11 };
 
   useEffect(() => {
     getOrders.request(postData);
@@ -43,7 +43,7 @@ function DeliveryReadyScreen({ navigation }) {
       setRefreshing(false);
     }, 2000);
   };
-
+  /*
   const getData = useCallback(() => {
     const order_status = 1; // 1 means pending orders
 
@@ -69,7 +69,7 @@ function DeliveryReadyScreen({ navigation }) {
         setLoading(false); // stop the loader
       });
   }, []);
-
+*/
   // Delete
   /*
 
