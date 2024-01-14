@@ -37,10 +37,11 @@ const changeSalesStatus = async (saleId, order_status) => {
   return result;
 };
 
-const changeOrderStatus = async (order_status, id) => {
+const changeOrderStatus = async (salesID, orderID, orderStatus) => {
   const result = await client.post("/vender-order-status-change", {
-    order_status,
-    id,
+    id: orderID,
+    sales_id: salesID,
+    order_status: orderStatus,
   });
   // console.log(result);
   return result;

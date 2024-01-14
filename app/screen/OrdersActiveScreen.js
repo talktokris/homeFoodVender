@@ -21,6 +21,9 @@ function OrdersActiveScreen({ navigation }) {
   const [orderData, setOrderData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const getOrders = useApi(orderApi.getOrderRunning);
+  const [busy, setBusy] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(false);
+  const [activeSalesId, setActiveSalesId] = useState(0);
 
   const {
     data: { data: getDataSet = [] },
@@ -35,6 +38,13 @@ function OrdersActiveScreen({ navigation }) {
     getOrders.request(postData);
   }, []);
 
+  useEffect(() => {
+    // setBusy(getOrders.loading);
+    // console.log(JSON.stringify(getOrders.data.data[0].id));
+    setBusy(getOrders.loading);
+    setErrorStatus(getOrders.error);
+  }, [getOrders.data]);
+
   const onRefresh = () => {
     getOrders.request(postData);
     setRefreshing(true);
@@ -43,122 +53,32 @@ function OrdersActiveScreen({ navigation }) {
       setRefreshing(false);
     }, 2000);
   };
-  /*
-  const getData = useCallback(() => {
-    const order_status = 1; // 1 means pending orders
 
-    setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
-    // useApi(resume.getResumeData, { currrentUser });
-    orderApi
-      .getOrderByStatus(order_status)
-      .then((data) => {
-        if (data.ok) {
-          //  setMenuData(data);
-          setLoading(false);
-          setMenuData(data.data.data);
-          // console.log(data.data.data);
-        } else {
-          setError(
-            "Unable to get the database. Please check your internet connection"
-          );
-          setEstatus(true);
-        }
-      })
-      .catch((error) => {
-        // display error
-        setLoading(false); // stop the loader
-      });
-  }, []);
-*/
-  // Delete
-  /*
+  const handleAction = async (salesID, orderID, orderStatus) => {
+    // const order_status = value ? 3 : 11; // 3 Accepted - 11 Not Accepted
 
-  function seletedAddress(data) {
-    d.id == userData.default_address.id;
-  }
-  const stateSelectedItem = userData.address_list.find(
-    (c) => c.id == userData.default_address.id
-  );
-
-  const handleAccept = (id) => {
-    Alert.alert("Accept Order", "Are you sure you want to accept the order?", [
-      {
-        text: "Yes",
-        onPress: () => onAccept(id),
-      },
-      { text: "No" },
-    ]);
-  };
-
-  const onAccept = async (id) => {
-    const order_status = 2;
-    const result = await orderApi.changeOrderStatus(order_status, id);
-    // const tokenSet= result.access_token;
+    setBusy(true);
+    const result = await orderApi.changeOrderStatus(
+      salesID,
+      orderID,
+      orderStatus
+    );
     // console.log(result.data);
 
-    //console.log("==================");
-    setLoading(false);
+    setBusy(false);
 
-    if (!result.ok) return;
-    if (!result.data) {
-      setEstatus(true);
-      setError(
-        "Unable to connect to server. Please check your Internet connection"
-      );
-    } else if (result.data.success == false) {
-      //  console.log("Krishna");
-      setEstatus(true);
-
-      setError(result.data.message);
-    } else if (result.data.success == true) {
-      // console.log(result.data);
-      const { data: id, message: messageSend } = result.data;
-
-      Alert.alert("Success", messageSend, [
-        {
-          text: "Ok",
-          onPress: () => {
-            setRunStatus(true);
-            navigation.navigate(routes.ORDERS_PENDING);
-          },
-        },
-      ]);
-      // navigation.navigate(routes.PRO_DONE, {
-      //   message: messageSend,
-      //   id: id,
-      //   navRoute: routes.ACCOUNT_ADDRESS,
-      // });
+    if (!result.ok || result.data == null) {
+      setErrorStatus(true);
     } else {
-      setEstatus(true);
-      setError("Unknown error");
+      if (result.data.success == false) {
+        setErrorStatus(true);
+      } else if (result.data.success == true) {
+        setErrorStatus(false);
+        getOrders.request(postData);
+      }
     }
   };
 
-  function makeUri(defID, imaData) {
-    //  console.log(imaData);
-    let imgUri = (imgUri = settings.imageUrl + "/menu/no_image.jpg");
-
-    if (imaData != null)
-      imgUri = settings.imageUrl + "/menu/" + defID + "/" + imaData.image_name;
-    return imgUri;
-  }
-
-  function statusTextOrder(statusId) {
-    const stateSelectedItem = user.options.order_status.find(
-      (c) => c.id == statusId
-    );
-    return stateSelectedItem.title;
-    // console.log(stateSelectedItem);
-  }
-
-  function statusTextPayment(statusId) {
-    const stateSelectedItem = user.options.payment_type.find(
-      (c) => c.id == statusId
-    );
-    return stateSelectedItem.title;
-    // console.log(stateSelectedItem);
-  }
-*/
   return (
     <>
       <ActivityIndicator visible={loading} />
@@ -189,7 +109,7 @@ function OrdersActiveScreen({ navigation }) {
                     oData={item.orders}
                     orderStatus={item.order_string_value}
                     tPrice={item.customer_amount}
-                    onAction={(id, value) => console.log(id + " - " + value)}
+                    onAction={handleAction}
                   />
                 ))}
               </View>

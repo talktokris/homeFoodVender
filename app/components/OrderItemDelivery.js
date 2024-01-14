@@ -18,7 +18,7 @@ import VegStatus from "../components/VegStatus";
 import CatHalal from "../components/CatHalal";
 import AppButtonSmall from "./AppButtonSmall";
 
-function OrderItemProcess({
+function OrderItemDelivery({
   sn,
   id,
   salesID,
@@ -82,7 +82,7 @@ function OrderItemProcess({
     setExtraData(newArray);
   };
 
-  // console.log(statusData.integer_value + "-" + statusData.sting_value);
+  console.log(statusData.integer_value + "-" + statusData.sting_value);
 
   return (
     <>
@@ -178,7 +178,7 @@ function OrderItemProcess({
   );
 }
 
-export default OrderItemProcess;
+export default OrderItemDelivery;
 
 const styles = StyleSheet.create({
   image: {

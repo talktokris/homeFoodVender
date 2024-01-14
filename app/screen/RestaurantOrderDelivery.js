@@ -30,10 +30,10 @@ import VegStatus from "../components/VegStatus";
 import CatHalal from "../components/CatHalal";
 import AppButton from "../components/AppButton";
 
-import OrderItemProcess from "../components/OrderItemProcess";
+import OrderItemDelivery from "../components/OrderItemDelivery";
 import AppButtonSmall from "../components/AppButtonSmall";
 
-function RestaurantOrderProcess({
+function RestaurantOrderDelivery({
   id,
   vData,
   tPrice,
@@ -98,7 +98,7 @@ function RestaurantOrderProcess({
 
           <View style={[styles.restItem, { borderBottomWidth: 0 }]}>
             {oData.map((ci, i) => (
-              <OrderItemProcess
+              <OrderItemDelivery
                 sn={i + 1}
                 id={ci.menu.id}
                 salesID={id}
@@ -198,4 +198,4 @@ const styles = StyleSheet.create({
   vListContainer: { flexDirection: "row", justifyContent: "space-between" },
 });
 
-export default RestaurantOrderProcess;
+export default RestaurantOrderDelivery;
