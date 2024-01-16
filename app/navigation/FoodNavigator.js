@@ -13,6 +13,7 @@ import ComplitedScreen from "../screen/ComplitedScreen";
 import ImageUplaodScreen from "../screen/ImageUplaodScreen";
 
 import HeaderTop from "../components/HeaderTop";
+import FoodOptionsScreen from "../screen/FoodOptionsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const FoodNavigator = () => (
     }}
   >
     <Stack.Screen name="Food Menu" component={FoodListingScreen} />
+    <Stack.Screen name="Food Options" component={FoodOptionsScreen} />
     <Stack.Screen name="Food Details" component={FoodViewScreen} />
     <Stack.Screen name="Add New Menu" component={FoodAddScreen} />
     <Stack.Screen name="Edit Menu" component={FoodEditScreen} />

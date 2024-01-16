@@ -13,6 +13,7 @@ import {
   Image,
   Alert,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -25,6 +26,9 @@ import Stars from "../components/Stars";
 import RightArrow from "./RightArrow";
 import Price from "../components/Price";
 import settings from "../config/setting";
+import AppEditButtonSmall from "../components/AppEditButtonSmall";
+import AppCircleButton from "../components/AppCircleButton";
+
 /*
 const reviewData = [
   {
@@ -75,12 +79,29 @@ function RestaurantInfo({ restData }) {
             style={styles.image}
             source={{ uri: makeUri(vender.id, vender.banner_image) }}
           />
+
+          <View style={styles.imageUpdateBtn}>
+            <AppCircleButton
+              icon="pencil-box"
+              size={35}
+              color={colors.primary}
+              onPress={() => console.log("Change Profile Btn")}
+            />
+          </View>
         </View>
         <View style={styles.restContainer}>
+          <View style={styles.imageUpdateBtn}>
+            <AppCircleButton
+              icon="pencil-box"
+              size={35}
+              color={colors.primary}
+              onPress={() => console.log("Change Profile Btn")}
+            />
+          </View>
           <View style={styles.restItem}>
             <View style={styles.restItemContainer}>
               <AppText style={styles.heading}>
-                {vender.name} - {vender.location_lebel}{" "}
+                {vender.name} - {vender.location_lebel}
               </AppText>
             </View>
             <RightArrow />
@@ -109,43 +130,6 @@ function RestaurantInfo({ restData }) {
               </AppText>
             </View>
             <RightArrow />
-          </View>
-          {vender.reviews.length >= 1 && (
-            <>
-              <View style={styles.restItem}>
-                <AppText>What people say</AppText>
-              </View>
-            </>
-          )}
-
-          <View style={[styles.restItem, styles.reviewArea]}>
-            <View>
-              <ScrollView
-                ref={scrollView}
-                onContentSizeChange={() => scrollView.current.scrollToEnd()}
-                horizontal={true}
-                style={styles.reviewList}
-              >
-                {vender.reviews.map((r) => (
-                  <View style={styles.reviewBox} key={r.id.toString()}>
-                    <AppText style={styles.text} numberOfLines={2}>
-                      {r.comments}
-                    </AppText>
-                    <View style={styles.reviewFooter}>
-                      <AppText style={styles.text}>
-                        <MaterialCommunityIcons
-                          name="star"
-                          size={12}
-                          color={colors.orange}
-                        />
-                        {r.rating}
-                      </AppText>
-                      <AppText style={styles.text}>{"  - " + r.author}</AppText>
-                    </View>
-                  </View>
-                ))}
-              </ScrollView>
-            </View>
           </View>
         </View>
       </Screen>
@@ -201,6 +185,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     fontSize: 18,
     color: colors.secondary,
+    width: "95%",
+    marginVertical: 10,
   },
 
   text: {
@@ -230,6 +216,15 @@ const styles = StyleSheet.create({
     marginLeft: 2,
   },
   reviewFooter: { flexDirection: "row", marginTop: 10 },
+
+  profileChangeBtn: { width: 100 },
+  imageUpdateBtn: {
+    position: "absolute",
+    zIndex: 2,
+    flexDirection: "row",
+    top: 5,
+    right: 0,
+  },
 });
 
 export default RestaurantInfo;

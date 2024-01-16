@@ -33,6 +33,7 @@ import FoodGridItem from "../components/FoodGridItem";
 import menuApi from "../api/menu";
 import useApi from "../hooks/useApi";
 import RetryComponent from "../components/RetryComponent";
+import AppEditButtonSmall from "../components/AppEditButtonSmall";
 
 function FoodListingScreen({ route, navigation }) {
   const { user, logOut } = useAuth();
@@ -133,8 +134,16 @@ function FoodListingScreen({ route, navigation }) {
             }
           >
             {restData.length >= 1 && <RestaurantInfo restData={restData} />}
-            <AppText style={styles.heading}> For you </AppText>
-            <Separater />
+
+            <View style={styles.imageUpdateBtn}>
+              <AppEditButtonSmall
+                title="Add Menu"
+                color="secondary"
+                icon="plus"
+                styleProps={styles.profileChangeBtn}
+                onPress={() => console.log("Rest Profile Update")}
+              />
+            </View>
 
             <View style={styles.searchBox}>
               <AppTextSearch
@@ -292,6 +301,15 @@ const styles = StyleSheet.create({
     flexDirection: "column-reverse",
     justifyContent: "center",
     padding: 10,
+  },
+  profileChangeBtn: { width: 120 },
+  imageUpdateBtn: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    zIndex: 2,
+    top: 5,
+    right: 20,
   },
 });
 
