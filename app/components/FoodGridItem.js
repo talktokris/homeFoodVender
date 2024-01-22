@@ -33,6 +33,7 @@ function FoodGridItem({
     let imgUri = settings.imageUrl + "/venders/no_image.jpg";
     if (imageName != null)
       imgUri = settings.imageUrl + "/venders/" + defID + "/" + imageName;
+    // console.log(imgUri);
     return imgUri;
   }
   return (
@@ -45,16 +46,15 @@ function FoodGridItem({
             </View>
           )}
 
-          {image && (
-            <Image
-              style={styles.image}
-              source={{ uri: makeUri(venderId, image) }}
-            />
-          )}
+          <Image
+            style={styles.image}
+            source={{ uri: makeUri(venderId, image) }}
+          />
+
           <View style={styles.buttonView}>
             <AppCircleButton
               icon="eye-circle"
-              color={colors.primary}
+              color={colors.secondary}
               onPress={onPress}
             />
           </View>

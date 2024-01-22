@@ -6,49 +6,28 @@ import colors from "../config/colors";
 import AppText from "./AppText";
 import AppCircleButton from "./AppCircleButton";
 
-function AppRadioCustom({ text, price, data, onPress, color }) {
-  const [isChecked, setIsChecked] = useState(false);
-
+function AppRadioCustom({ text, price, data, onEdit, onRemove }) {
   return (
-    <TouchableOpacity
-      onPress={() => setIsChecked(!isChecked) || onPress(data, isChecked)}
-    >
-      <View style={styles.container}>
-        <View style={styles.checkBoxArea}>
-          {isChecked ? (
-            <MaterialCommunityIcons
-              name="radiobox-marked"
-              size={15}
-              style={styles.icon}
-              color={colors.primary}
-            />
-          ) : (
-            <MaterialCommunityIcons
-              name="radiobox-blank"
-              size={15}
-              style={styles.icon}
-              color={colors.medium}
-            />
-          )}
-          <Text style={styles.text}> {text} </Text>
-          <AppCircleButton
-            icon="pencil"
-            size={20}
-            color={colors.orangeDark}
-            onPress={() => console.log("Change Profile Btn")}
-          />
-        </View>
-        <View style={styles.checkPrice}>
-          {/* {price && <AppText style={styles.textPrice}> +{price}</AppText>} */}
-          <AppCircleButton
-            icon="delete"
-            size={20}
-            color={colors.primary}
-            onPress={() => console.log("Change Profile Btn")}
-          />
-        </View>
+    <View style={styles.container}>
+      <View style={styles.checkBoxArea}>
+        <Text style={styles.text}> {text} </Text>
+        <AppCircleButton
+          icon="pencil"
+          size={20}
+          color={colors.orangeDark}
+          onPress={onEdit}
+        />
       </View>
-    </TouchableOpacity>
+      <View style={styles.checkPrice}>
+        {/* {price && <AppText style={styles.textPrice}> +{price}</AppText>} */}
+        <AppCircleButton
+          icon="delete"
+          size={20}
+          color={colors.primary}
+          onPress={onRemove}
+        />
+      </View>
+    </View>
   );
 }
 

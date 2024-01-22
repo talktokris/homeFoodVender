@@ -25,6 +25,7 @@ export default function App() {
 
   const restoreUser = async () => {
     const token = await authStorage.getToken();
+    // console.log(token);
     const user = await authStorage.getUser();
     if (user) setUser(user);
     await SplashScreen.hideAsync();

@@ -7,13 +7,13 @@ import colors from "../config/colors";
 import AppButton from "../components/AppButton";
 
 function ComplitedScreen({ route, navigation }) {
-  const listing = route.params.message;
-  const foodId = route.params.id;
+  const message = route.params.message;
+  const paramsObj = route.params.paramsObj;
   const navRoute = route.params.navRoute;
 
   return (
     <View style={styles.container}>
-      <AppText title={listing} />
+      <AppText title={message} />
 
       <MaterialCommunityIcons
         style={styles.icon}
@@ -21,12 +21,12 @@ function ComplitedScreen({ route, navigation }) {
         size={50}
         color={colors.medium}
       />
-      <Text style={styles.test}>{listing}</Text>
+      <Text style={styles.test}>{message}</Text>
       <View style={styles.buttonDiv}>
         <AppButton
           title="Ok"
           onPress={() => {
-            navigation.navigate(navRoute, { id: foodId });
+            navigation.navigate(navRoute, paramsObj);
           }}
         />
       </View>

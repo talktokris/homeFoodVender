@@ -40,7 +40,7 @@ function FoodListingScreen({ route, navigation }) {
 
   const currrentUser = user.results ? user.results[0].id : 0;
   const fethcID = currrentUser;
-
+  // const [fetch, setFetch] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const [memuFilttred, setMemuFilttred] = useState([]);
   const [resultText, setResultText] = useState("");
@@ -56,7 +56,8 @@ function FoodListingScreen({ route, navigation }) {
   };
 
   const [refreshing, setRefreshing] = useState(false);
-  const getFetchData = useApi(menuApi.fetchSingleMenu);
+
+  const getFetchData = useApi(menuApi.fetchVenderMenu);
 
   const {
     data: { vender: venderData = [], food: foodData = [] },
@@ -65,20 +66,17 @@ function FoodListingScreen({ route, navigation }) {
   } = getFetchData;
 
   useEffect(() => {
-    getFetchData.request(fethcID);
-  }, []);
+    const responseData = navigation.addListener("focus", () => {
+      getFetchData.request(fethcID);
+    });
+    return responseData;
+  }, [navigation]);
 
   useEffect(() => {
     setRestData(venderData);
     setMenuData(foodData);
     setMemuFilttred(foodData);
   }, [getFetchData.data]);
-
-  // useEffect(() => {
-  //   setRestData(venderData);
-  //   setMenuData(foodData);
-  //   setMemuFilttred(foodData);
-  // }, [getFetchData.data, getFetchData.loading]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -117,6 +115,11 @@ function FoodListingScreen({ route, navigation }) {
     }
   };
 
+  const dataUpdate = () => {
+    // console.log("Krishna: " + value);
+    setFetch(!fetch);
+  };
+
   return (
     <>
       <ActivityIndicator visible={loading} />
@@ -124,7 +127,7 @@ function FoodListingScreen({ route, navigation }) {
         {error ? (
           <RetryComponent
             onPress={onReTry}
-            message=" Couldn't retrieve the orders."
+            message=" Couldn't retrieve the menu data."
           />
         ) : (
           <ScrollView
@@ -133,7 +136,13 @@ function FoodListingScreen({ route, navigation }) {
               <RefreshControl refreshing={refreshing} onRefresh={onReTry} />
             }
           >
-            {restData.length >= 1 && <RestaurantInfo restData={restData} />}
+            {restData.length >= 1 && (
+              <RestaurantInfo
+                route={route}
+                navigation={navigation}
+                restData={restData}
+              />
+            )}
 
             <View style={styles.imageUpdateBtn}>
               <AppEditButtonSmall
@@ -141,7 +150,11 @@ function FoodListingScreen({ route, navigation }) {
                 color="secondary"
                 icon="plus"
                 styleProps={styles.profileChangeBtn}
-                onPress={() => console.log("Rest Profile Update")}
+                onPress={() => {
+                  navigation.navigate(routes.MENU_ADD_FOOD, {
+                    vender: restData,
+                  });
+                }}
               />
             </View>
 
@@ -177,8 +190,9 @@ function FoodListingScreen({ route, navigation }) {
                   discount={item.discount_per}
                   onPress={() => {
                     navigation.navigate(routes.FOOD_OPTIONS, {
-                      item: item,
-                      vender: restData,
+                      // item: item,
+                      menuID: item.id,
+                      venderId: restData[0].id,
                     });
                   }}
                   // onPress={() => navigation.navigate(routes.AC_MESAGES_VIEW, item)}

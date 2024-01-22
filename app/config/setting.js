@@ -4,11 +4,11 @@ export default {
   // imageUrl: "https://homefood.com.my/backend/vender_images",
 
   serverUrl:
-    "http://192.168.254.3/projects/homefood/backend/homefood-backend/public",
+    "http://192.168.254.6/projects/homefood/backend/homefood-backend/public",
   apiUrl:
-    "http://192.168.254.3/projects/homefood/backend/homefood-backend/public/api",
+    "http://192.168.254.6/projects/homefood/backend/homefood-backend/public/api",
   imageUrl:
-    "http://192.168.254.3/projects/homefood/backend/homefood-backend/public/vender_images",
+    "http://192.168.254.6/projects/homefood/backend/homefood-backend/public/vender_images",
 };
 /*
 

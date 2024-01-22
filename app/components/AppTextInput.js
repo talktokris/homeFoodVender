@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === "android" ? fonts.android : fonts.ios,
     color: colors.secondary,
     width: "85%",
+    padding: Platform.OS === "android" ? 7 : 5,
   },
   placeholder: { color: "#eeeeee" },
   icon: {

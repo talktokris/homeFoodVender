@@ -13,6 +13,7 @@ function PickerItem({ item, onPress }) {
 const styles = StyleSheet.create({
   text: {
     padding: 10,
+    fontSize: 12,
     backgroundColor: "#eee",
     marginTop: 2,
   },

@@ -28,6 +28,7 @@ import Price from "../components/Price";
 import settings from "../config/setting";
 import AppEditButtonSmall from "../components/AppEditButtonSmall";
 import AppCircleButton from "../components/AppCircleButton";
+import routes from "../navigation/routes";
 
 /*
 const reviewData = [
@@ -57,7 +58,7 @@ const reviewData = [
   },
 ];
 */
-function RestaurantInfo({ restData }) {
+function RestaurantInfo({ navigation, route, restData }) {
   const scrollView = useRef();
 
   const vender = restData[0];
@@ -84,8 +85,12 @@ function RestaurantInfo({ restData }) {
             <AppCircleButton
               icon="pencil-box"
               size={35}
-              color={colors.primary}
-              onPress={() => console.log("Change Profile Btn")}
+              color={colors.secondary}
+              onPress={() => {
+                navigation.navigate(routes.VENDER_IMAGE_UPLOAD, {
+                  vender: restData,
+                });
+              }}
             />
           </View>
         </View>
@@ -94,8 +99,12 @@ function RestaurantInfo({ restData }) {
             <AppCircleButton
               icon="pencil-box"
               size={35}
-              color={colors.primary}
-              onPress={() => console.log("Change Profile Btn")}
+              color={colors.secondary}
+              onPress={() => {
+                navigation.navigate(routes.VENDER_PROFILE, {
+                  vender: restData,
+                });
+              }}
             />
           </View>
           <View style={styles.restItem}>

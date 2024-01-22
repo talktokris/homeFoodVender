@@ -14,10 +14,17 @@ export default Object.freeze({
 
   SEARCH_FOOD: "Food Menu",
   SEARCH_DETAILS: "Food Details",
+  VENDER_PROFILE: "Profile Update",
   FOOD_OPTIONS: "Food Options",
   MENU_ADD_FOOD: "Add New Menu",
   MENU_EDIT_FOOD: "Edit Menu",
-  MENU_IMAGE_UPLOAD: "Image Upload",
+  VENDER_IMAGE_UPLOAD: "Image Upload",
+  MENU_IMAGE_UPLOAD: "Menu Image Upload",
+
+  MENU_TITLE_ADD: "Add Title",
+  MENU_TITLE_EDIT: "Edit Title",
+  MENU_EXTRA_ADD: "Add Extra",
+  MENU_EXTRA_EDIT: "Edit Extra",
 
   ACCOUNT_MENU: "Account Menu",
   ACCOUNT_PROFILE: "Profile",

@@ -14,6 +14,12 @@ import ImageUplaodScreen from "../screen/ImageUplaodScreen";
 
 import HeaderTop from "../components/HeaderTop";
 import FoodOptionsScreen from "../screen/FoodOptionsScreen";
+import ProfileScreen from "../screen/ProfileScreen";
+import MenuTitleAddScreen from "../screen/MenuTitleAddScreen";
+import MenuTitleEditScreen from "../screen/MenuTitleEditScreen";
+import MenuExtraAddScreen from "../screen/MenuExtraAddScreen";
+import MenuExtraEditScreen from "../screen/MenuExtraEditScreen";
+import MenuImageUplaodScreen from "../screen/MenuImageUplaodScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,9 +40,15 @@ const FoodNavigator = () => (
     <Stack.Screen name="Food Menu" component={FoodListingScreen} />
     <Stack.Screen name="Food Options" component={FoodOptionsScreen} />
     <Stack.Screen name="Food Details" component={FoodViewScreen} />
+    <Stack.Screen name="Profile Update" component={ProfileScreen} />
     <Stack.Screen name="Add New Menu" component={FoodAddScreen} />
     <Stack.Screen name="Edit Menu" component={FoodEditScreen} />
+    <Stack.Screen name="Menu Image Upload" component={MenuImageUplaodScreen} />
     <Stack.Screen name="Image Upload" component={ImageUplaodScreen} />
+    <Stack.Screen name="Add Title" component={MenuTitleAddScreen} />
+    <Stack.Screen name="Edit Title" component={MenuTitleEditScreen} />
+    <Stack.Screen name="Add Extra" component={MenuExtraAddScreen} />
+    <Stack.Screen name="Edit Extra" component={MenuExtraEditScreen} />
     <Stack.Screen name="Done" component={ComplitedScreen} />
   </Stack.Navigator>
 );

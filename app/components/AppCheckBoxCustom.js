@@ -6,9 +6,7 @@ import colors from "../config/colors";
 import AppText from "./AppText";
 import AppCircleButton from "./AppCircleButton";
 
-function AppCheckBoxCustom({ text, price, data, onPress, color }) {
-  const [isChecked, setIsChecked] = useState(false);
-
+function AppCheckBoxCustom({ text, price, data, onEdit, onRemove }) {
   return (
     <View style={styles.container}>
       <View style={styles.checkBoxArea}>
@@ -17,7 +15,7 @@ function AppCheckBoxCustom({ text, price, data, onPress, color }) {
           icon="pencil"
           size={20}
           color={colors.orangeDark}
-          onPress={() => console.log("Change Profile Btn")}
+          onPress={onEdit}
         />
       </View>
       <View style={styles.checkPrice}>
@@ -26,7 +24,7 @@ function AppCheckBoxCustom({ text, price, data, onPress, color }) {
           icon="delete"
           size={20}
           color={colors.primary}
-          onPress={() => console.log("Change Profile Btn")}
+          onPress={onRemove}
         />
       </View>
     </View>

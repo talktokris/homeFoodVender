@@ -18,15 +18,19 @@ import colors from "../config/colors";
 import AppCheckBox from "../components/AppCheckBox";
 import useAuth from "../auth/useAuth";
 import menuApi from "../api/menu";
+
 import routes from "../navigation/routes";
+import useCrudApi from "../hooks/useCrudApi";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(5).max(100).label("Title"),
   description: Yup.string().required().min(4).max(200).label("Description"),
+  food_category: Yup.object().required().nullable().label("Food Category"),
   vender_price: Yup.number().required().integer().label("Vender Price"),
   customer_price: Yup.number().required().integer().label("Customer Price"),
-  discount: Yup.number().required().integer().label("Discount"),
+  halal_status: Yup.object().required().nullable().label("Halal Status"),
   veg_status: Yup.object().required().nullable().label("Veg Status"),
+  discount: Yup.number().required().integer().label("Discount"),
   active_status: Yup.object().required().nullable().label("Active Status"),
 });
 
@@ -44,6 +48,10 @@ function FoodAddScreen({ route, navigation }) {
 
   const activeData = user.options.active_status;
   const vegStatusData = user.options.veg_status;
+  const halalStatusData = user.options.halal_status;
+  const foodCategory = user.options.food_category;
+
+  // console.log(options);
   const marginPercentage = user.results[0].app_margin_per;
   const ref = useRef();
 
@@ -65,7 +73,7 @@ function FoodAddScreen({ route, navigation }) {
     if (discountValue >= 1) {
       const venderDiscount = (Number(e) / 100) * discountValue;
       totalVenderPrice = Number(e) - venderDiscount;
-      console.log(totalVenderPrice);
+      // console.log(totalVenderPrice);
     } else {
       totalVenderPrice = Number(e);
     }
@@ -84,46 +92,31 @@ function FoodAddScreen({ route, navigation }) {
     ref.current.setFieldValue("customer_price", "" + totalPrice + "");
   }
 
-  const handleSubmit = async ({
-    title,
-    description,
-    customer_price,
-    veg_status,
-    active_status,
-  }) => {
+  const handleSubmit = async (formData) => {
     setLoading(true);
+    setEstatus(false);
+    const result = await menuApi.createMenu(formData);
 
-    const result = await menuApi.createMenu(
-      title,
-      description,
-      venderPrice,
-      customer_price,
-      discountValue,
-      veg_status,
-      active_status
-    );
-    // const tokenSet= result.access_token;
-    // console.log(result.data);
-    //console.log("==================");
     setLoading(false);
 
-    if (!result.ok) return;
-    if (!result.data) {
+    if (!result.ok) {
       setEstatus(true);
       setError(
         "Unable to connect to server. Please check your Internet connection"
       );
-    } else if (result.data.success == false) {
-      //  console.log("Krishna");
-      setEstatus(true);
-      setError(result.data.message);
-    } else if (result.data.success == true) {
-      const { data: id, message: messageSend } = result.data;
-      navigation.navigate(routes.PRO_DONE, {
-        message: messageSend,
-        id: id,
-        navRoute: routes.SEARCH_DETAILS,
-      });
+    } else if (result.ok) {
+      if (result.data.success == false) {
+        setEstatus(true);
+        setError(result.data.message);
+      } else if (result.data.success == true) {
+        // console.log(result.data);
+        const { data: id, message: messageSend } = result.data;
+        navigation.navigate(routes.PRO_DONE, {
+          message: messageSend,
+          id: id,
+          navRoute: routes.SEARCH_FOOD,
+        });
+      }
     } else {
       setEstatus(true);
       setError("Unknown error");
@@ -137,10 +130,12 @@ function FoodAddScreen({ route, navigation }) {
           initialValues={{
             title: "",
             description: "",
+            food_category: "",
             vender_price: 0,
             customer_price: 0,
-            discount: 0,
+            halal_status: "",
             veg_status: "",
+            discount: 0,
             active_status: "",
           }}
           innerRef={ref}
@@ -148,25 +143,7 @@ function FoodAddScreen({ route, navigation }) {
           validationSchema={validationSchema}
         >
           <ErrorMessage error={error} visible={eStatus} />
-          {/* <View style={styles.imageFrame}>
-            <Image
-              source={require("../assets/images/img.png")}
-              style={styles.image}
-            />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => console.log("Click Picture Upload")}
-              >
-                <View style={styles.uploadBtn}>
-                  <MaterialCommunityIcons
-                    name="camera"
-                    size={20}
-                    color={colors.white}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View> */}
+
           <View style={styles.inputContainer}>
             <AppFormField
               name="title"
@@ -189,7 +166,18 @@ function FoodAddScreen({ route, navigation }) {
               maxLength={200}
               multiline
               numberOfLines={3}
-              style={{ height: 60 }}
+              style={{ height: 60, paddingLeft: 10, color: colors.medium }}
+            />
+
+            <AppFormPicker
+              items={foodCategory}
+              name="food_category"
+              /* numberOfColumns={2} */
+              /* PickerItemComponent={PickerItem} */
+
+              placeholder="Food Category"
+
+              /* width="80%" */
             />
           </View>
 
@@ -222,16 +210,15 @@ function FoodAddScreen({ route, navigation }) {
 
           <View style={styles.otp}>
             <View style={styles.viewHalf}>
-              <AppFormField
-                name="discount"
-                autoCapitalize="none"
-                autoCorrect={false}
-                placeholder="Discount Percentage"
-                textContentType="name"
-                secureTextEntry={false}
-                maxLength={6}
-                //  onChange={(e) => dicountSet(e)}
-                onChange={(text) => discountHandle(text)}
+              <AppFormPicker
+                items={halalStatusData}
+                name="halal_status"
+                /* numberOfColumns={2} */
+                /* PickerItemComponent={PickerItem} */
+
+                placeholder="Halal Status"
+
+                /* width="80%" */
               />
             </View>
             <View style={styles.viewHalf}>
@@ -240,7 +227,6 @@ function FoodAddScreen({ route, navigation }) {
                 name="veg_status"
                 /* numberOfColumns={2} */
                 /* PickerItemComponent={PickerItem} */
-
                 placeholder="Veg Status"
 
                 /* width="80%" */
@@ -249,6 +235,19 @@ function FoodAddScreen({ route, navigation }) {
           </View>
 
           <View style={styles.otp}>
+            <View style={styles.viewHalf}>
+              <AppFormField
+                name="discount"
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder="Discount"
+                textContentType="name"
+                secureTextEntry={false}
+                maxLength={6}
+                //  onChange={(e) => dicountSet(e)}
+                onChange={(text) => discountHandle(text)}
+              />
+            </View>
             <View style={styles.viewHalf}>
               <AppFormPicker
                 items={activeData}
@@ -261,7 +260,6 @@ function FoodAddScreen({ route, navigation }) {
                 /* width="80%" */
               />
             </View>
-            <View style={styles.viewHalf}></View>
           </View>
 
           <SubmitButton title="Save" color="secondary" />
@@ -274,52 +272,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 5,
   },
-  imageFrame: {
-    justifyContent: "center",
-    backgroundColor: colors.secondary,
-    width: 380,
-    height: 209,
-    borderRadius: 5,
-  },
-  image: {
-    width: 375,
-    height: 205,
-    alignSelf: "center",
-    margin: 0,
-    marginTop: 0,
-    borderRadius: 4,
-  },
-  buttonContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    top: -40,
-    left: 40,
-  },
-  uploadBtn: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    zIndex: 2,
-    backgroundColor: colors.primary,
-    borderWidth: 4,
-    borderColor: colors.white,
-  },
 
-  viewStyleForLine: {
-    borderBottomColor: colors.secondary,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    alignSelf: "stretch",
-    width: "100%",
-    marginBottom: 30,
-    marginTop: 30,
-  },
-  msg: {
-    color: colors.secondary,
-    fontSize: 16,
-    fontWeight: "500",
-  },
   inputContainer: {
     margin: 5,
     margin: 5,
@@ -328,47 +281,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  viewHalf: { flex: 1, width: "50%", padding: 5, marginTop: -15 },
-  resend: {
+  viewHalf: {
+    flex: 1,
+    width: "50%",
+    padding: 5,
+    marginTop: -15,
     color: colors.primary,
     fontWeight: "800",
-  },
-  imageFrame: {
-    justifyContent: "center",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    alignSelf: "center",
-    margin: 5,
-    marginTop: 20,
-  },
-  buttonContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    top: -40,
-    left: 40,
-  },
-  uploadBtn: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    zIndex: 2,
-    backgroundColor: colors.primary,
-    borderWidth: 4,
-    borderColor: colors.white,
-  },
-
-  viewStyleForLine: {
-    borderBottomColor: colors.secondary,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    alignSelf: "stretch",
-    width: "100%",
-    marginBottom: 30,
-    marginTop: 30,
   },
 });
 
