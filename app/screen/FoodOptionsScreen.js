@@ -149,7 +149,17 @@ function FoodOptionsScreen({ route, navigation }) {
     }
   };
 
-  const handlemenuDataRemove = async (menuDataData, menuData) => {
+  const handlemenuDataRemove = (menuDataData, menuData) => {
+    Alert.alert("Delete", "Are you sure you want to delete this item?", [
+      {
+        text: "Yes",
+        onPress: () => handleDeleteExtraItem(menuDataData, menuData),
+      },
+      { text: "No" },
+    ]);
+  };
+
+  const handleDeleteExtraItem = async (menuDataData, menuData) => {
     const argId = menuDataData.id;
     const foodMenuId = menuData[0].id;
 
@@ -263,7 +273,20 @@ function FoodOptionsScreen({ route, navigation }) {
                         color="secondary"
                         icon="delete"
                         styleProps={styles.profileChangeBtn}
-                        onPress={() => handleMenuRemove(fethcID, menuData[0])}
+                        onPress={() => {
+                          Alert.alert(
+                            "Delete",
+                            "Are you sure you want to delete this menu?",
+                            [
+                              {
+                                text: "Yes",
+                                onPress: () =>
+                                  handleMenuRemove(fethcID, menuData[0]),
+                              },
+                              { text: "No" },
+                            ]
+                          );
+                        }}
                       />
                     </View>
                   </View>
@@ -345,7 +368,18 @@ function FoodOptionsScreen({ route, navigation }) {
                               size={20}
                               color={colors.primary}
                               onPress={() => {
-                                handleTitleRemove(op);
+                                Alert.alert(
+                                  "Delete",
+                                  "Are you sure you want to delete this menu?",
+                                  [
+                                    {
+                                      text: "Yes",
+                                      onPress: () => handleTitleRemove(op),
+                                    },
+                                    { text: "No" },
+                                  ]
+                                );
+                                // handleTitleRemove(op);
                               }}
                             />
                           </View>
@@ -412,7 +446,19 @@ function FoodOptionsScreen({ route, navigation }) {
                               size={20}
                               color={colors.primary}
                               onPress={() => {
-                                handleTitleRemove(op);
+                                Alert.alert(
+                                  "Delete",
+                                  "Are you sure you want to delete this menu?",
+                                  [
+                                    {
+                                      text: "Yes",
+                                      onPress: () => handleTitleRemove(op),
+                                    },
+                                    { text: "No" },
+                                  ]
+                                );
+
+                                // handleTitleRemove(op);
                               }}
                             />
                           </View>
@@ -422,7 +468,20 @@ function FoodOptionsScreen({ route, navigation }) {
                               key={op.id.toString()}
                               size={25}
                               color={colors.secondary}
-                              onPress={() => handleMenumenuData(op, menuData)}
+                              onPress={() => {
+                                Alert.alert(
+                                  "Delete",
+                                  "Are you sure you want to delete this title?",
+                                  [
+                                    {
+                                      text: "Yes",
+                                      onPress: () =>
+                                        handleMenumenuData(op, menuData),
+                                    },
+                                    { text: "No" },
+                                  ]
+                                );
+                              }}
                             />
                           </View>
                         </View>
