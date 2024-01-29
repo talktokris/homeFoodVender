@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   },
   checkPrice: {
     flexDirection: "row",
+    justifyContent: "flex-end",
     alignItems: "center",
     width: "20%",
   },

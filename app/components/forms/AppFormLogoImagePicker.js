@@ -5,9 +5,9 @@ import { useFormikContext } from "formik";
 import ErrorMessage from "./ErrorMessage";
 import ImageInputList from "../ImageInputList";
 import ImageInput from "../ImageInput";
-import ImageInputSingle from "../ImageInputSingle";
+import ImageInputLogo from "../ImageInputLogo";
 
-function AppFormImagePicker({ name, imageStatus, imagePath }) {
+function AppFormLogoImagePicker({ name, imageStatus, imagePath }) {
   const { errors, setFieldValue, touched, values } = useFormikContext();
   const imageUris = values[name];
 
@@ -24,7 +24,7 @@ function AppFormImagePicker({ name, imageStatus, imagePath }) {
 
   return (
     <>
-      <ImageInputSingle
+      <ImageInputLogo
         imageUris={[...imageUris]}
         // onAddImage={handleAdd}
         // onRemoveImage={handleRemove}
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   container: {},
 });
 
-export default AppFormImagePicker;
+export default AppFormLogoImagePicker;

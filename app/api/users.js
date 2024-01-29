@@ -22,8 +22,16 @@ const register = async (userInfo) => {
   };
 
 
-const userProfileUpdate = async (first_name, last_name, email) => {
+const userProfileUpdate = async (
+  name,
+  location_lebel,
+  first_name,
+  last_name,
+  email
+) => {
   const result = await client.post("/client-profile-update", {
+    name,
+    location_lebel,
     first_name,
     last_name,
     email,

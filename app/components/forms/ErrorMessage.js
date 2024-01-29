@@ -12,7 +12,7 @@ function ErrorMessage({ error, visible }) {
 const styles = StyleSheet.create({
   error: {
     color: colors.errorColor,
-    fontSize: 16,
+    fontSize: 14,
     textAlign: "center",
   },
 });

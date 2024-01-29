@@ -37,6 +37,7 @@
     "react-native-svg": "13.4.0",
     "yup": "^0.32.11"
   },
+
   "devDependencies": {
     "@babel/core": "^7.12.9"
   },

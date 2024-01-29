@@ -38,6 +38,14 @@
         "projectId": "d359e464-570a-4cd6-8bf1-331692f54663"
       }
     },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The application wants to access your photos "
+        }
+      ]
+    ],
     "owner": "talktokris"
   }
 }

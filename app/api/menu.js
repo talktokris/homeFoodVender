@@ -153,6 +153,8 @@ const deleteMenu = async (id) => {
 };
 
 const imageUploadMenu = async (fileUri, menuID) => {
+  // console.log(fileUri + "-" + menuID);
+
   var fileExtension = fileUri.split(".").pop();
   var imageName = Math.floor(Date.now() / 1000);
 
@@ -173,17 +175,52 @@ const imageUploadMenu = async (fileUri, menuID) => {
   });
 
   return responce;
-  //console.log(responce);
+  // console.log(responce.data);
 };
 
-const imageDeleteMenu = async (image_id, menu_id) => {
+const imageDeleteMenu = async (menu_id, image_name) => {
+  // console.log(menu_id + "-" + image_name);
   const responce = await client.post("/vender-menu-image-delete", {
-    image_id: image_id,
-    menu_id: menu_id,
+    menu_id,
+    image_name,
   });
   return responce;
   // console.log(image_id + "-" + menu_id);
 };
+
+const imageUploadProfile = async (fileUri, vender_id) => {
+  var fileExtension = fileUri.split(".").pop();
+  var imageName = Math.floor(Date.now() / 1000);
+
+  // console.log(imageName + "-" + fileExtension);
+
+  const data = new FormData();
+  data.append("vender_id", vender_id);
+  data.append("image_name", {
+    name: vender_id + "-" + imageName + "." + fileExtension,
+    type: "image/jpeg",
+    uri: fileUri,
+  });
+
+  const responce = await client.post("/vender-profile-image-upload", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return responce;
+  //  console.log(responce.data);
+};
+
+const imageDeleteProfile = async (vender_id, image_name) => {
+  const responce = await client.post("/vender-profile-image-delete", {
+    vender_id,
+    image_name,
+  });
+  return responce;
+  // console.log(image_id + "-" + menu_id);
+};
+
 const setImageDefautlMenu = async (countryCode, mobileNo) => {
   const responce = await client.post("/vender-menu-set-default-image", {
     country_id: countryCode.id,
@@ -228,6 +265,8 @@ export default {
   deleteMenu,
   imageUploadMenu,
   imageDeleteMenu,
+  imageUploadProfile,
+  imageDeleteProfile,
   setImageDefautlMenu,
   fetchAllMenu,
   fetchSingleMenu,

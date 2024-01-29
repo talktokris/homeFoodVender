@@ -13,14 +13,6 @@ import routes from "../navigation/routes";
 
 const menuItems = [
   {
-    title: "Profile",
-    icon: {
-      name: "account-box-outline",
-      backgroundColor: colors.secondary,
-    },
-    targetScreen: routes.ACCOUNT_PROFILE,
-  },
-  {
     title: "Address",
     icon: {
       name: "map-marker",
@@ -65,6 +57,7 @@ const menuItems = [
 function AccountScreen({ route, navigation }) {
   const { user, logOut } = useAuth();
   const userData = user.results[0];
+
   var firstName = "";
   var lastName = "";
   var email = "";

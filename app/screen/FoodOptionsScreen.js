@@ -106,11 +106,51 @@ function FoodOptionsScreen({ route, navigation }) {
   }
 
   function makeUri(defID, imageName) {
-    let imgUri = settings.imageUrl + "/venders/no_image.jpg";
+    let imgUri = settings.imageUrl + "/venders/no_image_logo_sm.jpg";
     if (imageName != null)
       imgUri = settings.imageUrl + "/venders/" + defID + "/" + imageName;
     return imgUri;
   }
+
+  const handleMenuImageRemove = async (menu_id, image_name) => {
+    // console.log(menu_id + "- " + image_name);
+    // console.log(MenumenuData.id);
+
+    // console.log("Hi Image");
+
+    setLoading(true);
+    setEstatus(false);
+    const result = await menuApi.imageDeleteMenu(menu_id, image_name);
+
+    setLoading(false);
+
+    if (!result.ok) {
+      setEstatus(true);
+      setErrorMsg(
+        "Unable to connect to server. Please check your Internet connection"
+      );
+    } else if (result.ok) {
+      if (result.data.success == false) {
+        setEstatus(true);
+        setErrorMsg(result.data.message);
+      } else if (result.data.success == true) {
+        // console.log(result.data);
+        const { data: id, message: messageSend } = result.data;
+
+        navigation.navigate(routes.PRO_DONE, {
+          message: messageSend,
+          paramsObj: {
+            venderId: fethcID,
+            menuID: menuID,
+          },
+          navRoute: routes.FOOD_OPTIONS,
+        });
+      }
+    } else {
+      setEstatus(true);
+      setErrorMsg("Unknown error");
+    }
+  };
 
   const handleTitleRemove = async (titleData) => {
     // console.log(titleData);
@@ -197,8 +237,41 @@ function FoodOptionsScreen({ route, navigation }) {
     }
   };
 
-  const handleMenuRemove = (menuData, MenumenuData) => {
-    console.log("Menu Delete Clicked");
+  const handleMenuRemove = async (menuData, MenumenuData) => {
+    // console.log(MenumenuData.id);
+
+    setLoading(true);
+    setEstatus(false);
+    const result = await menuApi.deleteMenu(MenumenuData.id);
+
+    setLoading(false);
+
+    if (!result.ok) {
+      setEstatus(true);
+      setErrorMsg(
+        "Unable to connect to server. Please check your Internet connection"
+      );
+    } else if (result.ok) {
+      if (result.data.success == false) {
+        setEstatus(true);
+        setErrorMsg(result.data.message);
+      } else if (result.data.success == true) {
+        // console.log(result.data);
+        const { data: id, message: messageSend } = result.data;
+
+        navigation.navigate(routes.PRO_DONE, {
+          message: messageSend,
+          paramsObj: {
+            venderId: fethcID,
+            menuID: menuID,
+          },
+          navRoute: routes.SEARCH_FOOD,
+        });
+      }
+    } else {
+      setEstatus(true);
+      setErrorMsg("Unknown error");
+    }
   };
 
   const handleMenumenuData = (op, menuData) => {
@@ -231,19 +304,68 @@ function FoodOptionsScreen({ route, navigation }) {
           <ScrollView showsVerticalScrollIndicator={false}>
             {menuData.length >= 1 && (
               <>
-                <View style={styles.imageUpdateBtn}>
-                  <AppEditButtonSmall
-                    title="Change"
-                    color="secondary"
-                    icon="image-edit"
-                    styleProps={styles.profileChangeBtn}
-                    onPress={() => {
-                      navigation.navigate(routes.MENU_IMAGE_UPLOAD, {
-                        fethcID: fethcID,
-                        menu: menuData[0],
-                      });
-                    }}
-                  />
+                <View style={styles.imageAllBtns}>
+                  <View style={styles.circleBtnBg}>
+                    {menuData[0].image_name ? (
+                      <AppCircleButton
+                        icon="pencil"
+                        size={20}
+                        color={colors.lightGray}
+                        onPress={() => {
+                          navigation.navigate(routes.MENU_IMAGE_UPLOAD, {
+                            menuID: menuID,
+                            fethcID: fethcID,
+                            imagePath: {
+                              uri: makeUri(fethcID, menuData[0].image_name),
+                            },
+                            imageName: menuData[0].image_name,
+                          });
+                        }}
+                      />
+                    ) : (
+                      <AppCircleButton
+                        icon="plus"
+                        size={30}
+                        color={colors.lightGray}
+                        onPress={() => {
+                          navigation.navigate(routes.MENU_IMAGE_UPLOAD, {
+                            menuID: menuID,
+                            fethcID: fethcID,
+                            imagePath: {
+                              uri: makeUri(fethcID, menuData[0].image_name),
+                            },
+                            imageName: menuData[0].image_name,
+                          });
+                        }}
+                      />
+                    )}
+                  </View>
+                  {menuData[0].image_name && (
+                    <View style={styles.circleBtnBg}>
+                      <AppCircleButton
+                        icon="delete"
+                        size={20}
+                        color={colors.lightGray}
+                        onPress={() => {
+                          Alert.alert(
+                            "Delete",
+                            "Are you sure you want to remove this image?",
+                            [
+                              {
+                                text: "Yes",
+                                onPress: () =>
+                                  handleMenuImageRemove(
+                                    menuID,
+                                    menuData[0].image_name
+                                  ),
+                              },
+                              { text: "No" },
+                            ]
+                          );
+                        }}
+                      />
+                    </View>
+                  )}
                 </View>
 
                 <View>
@@ -602,6 +724,24 @@ const styles = StyleSheet.create({
   },
   profileChangeBtn: { width: 110 },
   btnContainer: { flexDirection: "row", padding: 5 },
+
+  imageAllBtns: {
+    position: "absolute",
+    width: "100%",
+    zIndex: 2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 5,
+  },
+  circleBtnBg: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.secondary,
+    borderColor: colors.lightGray,
+    borderWidth: 1,
+    justifyContent: "center",
+  },
   imageUpdateBtn: {
     position: "absolute",
     zIndex: 2,

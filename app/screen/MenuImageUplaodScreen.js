@@ -22,8 +22,13 @@ const validationSchema = Yup.object().shape({
 
 function MenuImageUplaodScreen({ route, navigation, props }) {
   const menuID = route.params.menuID;
+  const fethcID = route.params.fethcID;
+  const fullImagePath = route.params.imagePath;
+  const imageName = route.params.imageName;
+  // console.log(fullImagePath);
+
   const [ImagePath, SetImagePath] = useState(
-    settings.imageUrl + "/menu/no_image.jpg"
+    settings.imageUrl + "/venders/no_image_bg.jpg"
   );
   const [ImageStatus, SetImageStatus] = useState();
 
@@ -41,19 +46,64 @@ function MenuImageUplaodScreen({ route, navigation, props }) {
   //console.log(imagePath);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [errorMsg, setErrorMsg] = useState(null);
+  // const [errorMsg, setErrorMsg] = useState(null);
   const [eStatus, setEstatus] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
+  const [error, setError] = useState();
+
   const handleSubmit = async (userInfo) => {
-    //console.log("-----------Hi------------");
+    setLoading(true);
+    setEstatus(false);
+    const imageUri = userInfo.images[0]?.assets[0]?.uri;
+    const result = await menuApi.imageUploadMenu(imageUri, menuID);
+    // const result = await menuApi.editAddOn(formData, menu, heading, extraData);
+
+    setLoading(false);
+
+    if (!result.ok) {
+      setEstatus(true);
+      setError(
+        "Unable to connect to server. Please check your Internet connection"
+      );
+    } else if (result.ok) {
+      if (result.data.success == false) {
+        setEstatus(true);
+        setError(result.data.message);
+      } else if (result.data.success == true) {
+        // console.log(result.data);
+        const { data: id, message: messageSend } = result.data;
+
+        navigation.navigate(routes.PRO_DONE, {
+          message: messageSend,
+          paramsObj: {
+            venderId: fethcID,
+            menuID: menuID,
+          },
+          navRoute: routes.FOOD_OPTIONS,
+        });
+      }
+    } else {
+      setEstatus(true);
+      setError("Unknown error");
+    }
+
+    /*
+    // console.log(userInfo.images[0].uri);
+
+    // console.log(userInfo.images[0].assets[0].uri);
+
     // console.log(menuID);
     // console.log(userInfo.images[0].uri);
     //   const fileUri = userInfo.images[0].uri;
 
+    // console.log(userInfo.images[0]?.assets[0]?.uri);
+
     setLoading(true);
     const result = await menuApi.imageUploadMenu(
-      userInfo.images[0].uri,
+      //  userInfo.images[0].uri,
+      userInfo.images[0]?.assets[0]?.uri,
+
       menuID
     );
     setLoading(false);
@@ -80,6 +130,8 @@ function MenuImageUplaodScreen({ route, navigation, props }) {
       setEstatus(true);
       setErrorMsg("Unknown error");
     }
+
+    */
   };
 
   return (
@@ -91,7 +143,8 @@ function MenuImageUplaodScreen({ route, navigation, props }) {
           progress={progress}
           visible={uploadVisible}
         />
-        <ErrorMessage error={errorMsg} visible={eStatus} />
+
+        <ErrorMessage error={error} visible={eStatus} />
         {/*
         {users.image == null ? (
           <Image
@@ -110,7 +163,8 @@ function MenuImageUplaodScreen({ route, navigation, props }) {
           validationSchema={validationSchema}
         >
           <AppText style={styles.note}>
-            Images should be jpg or png and less then 5 MB in size
+            Images should be jpg or png and less then 5 MB in size with ratio of
+            (W:600 X H:400)
           </AppText>
           <View style={styles.uploadBtn}>
             <AppFormImagePicker
@@ -118,7 +172,7 @@ function MenuImageUplaodScreen({ route, navigation, props }) {
               imageStatus=""
               imagePath={ImagePath}
             />
-            <SubmitButton title="Upload" />
+            <SubmitButton title="Upload" color="secondary" />
           </View>
         </AppForm>
       </View>
@@ -127,13 +181,25 @@ function MenuImageUplaodScreen({ route, navigation, props }) {
 }
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
+    padding: 20,
+    borderWidth: 1,
+    margin: 20,
+    borderRadius: 10,
+    borderColor: colors.light,
+    backgroundColor: "#f7f7f7",
+    shadowColor: "#c4c2c2",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    paddingBottom: 5,
   },
   note: {
     padding: 10,
-    fontSize: 14.5,
+    fontSize: 12,
     color: colors.medium,
+    textAlign: "center",
   },
+  uploadBtn: { marginHorizontal: 50, marginBottom: 20 },
 });
 
 export default MenuImageUplaodScreen;

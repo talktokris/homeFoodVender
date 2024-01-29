@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import ActivityIndicator from "./ActivityIndicator";
 
-function ImageInputSingle({ name, imageUri, imageStatus, imagePath }) {
+function ImageInputLogo({ name, imageUri, imageStatus, imagePath }) {
   const [loading, setLoading] = useState(false);
   const [imageUriLink, setImageUriLink] = useState(imagePath);
   const { errors, setFieldValue, touched, values } = useFormikContext();
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
     borderColor: colors.lightGray,
   },
   image: {
-    width: 300,
-    height: 200,
+    width: 350,
+    height: 150,
     alignSelf: "center",
     // resizeMode: "contain",
     borderRadius: 20,
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ImageInputSingle;
+export default ImageInputLogo;
