@@ -20,7 +20,7 @@ const menuItems = [
     },
     targetScreen: routes.ACCOUNT_ADDRESS,
   },
-  {
+  /*{
     title: "Earning Statement",
     icon: {
       name: "format-list-bulleted-type",
@@ -35,7 +35,7 @@ const menuItems = [
       backgroundColor: colors.secondary,
     },
     targetScreen: routes.ACCOUNT_ORDER_HISTORY,
-  },
+  },*/
   {
     title: "Messages",
     icon: {

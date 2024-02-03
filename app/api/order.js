@@ -8,7 +8,8 @@ const getOrderPending = async (data) => {
   const result = await client.post("/vender-order-pending", {
     order_status: data.order_status,
   });
-  // console.log(order_status);
+  // console.log(result.data);
+
   return result;
 };
 
@@ -16,7 +17,6 @@ const getOrderRunning = async (data) => {
   const result = await client.post("/vender-order-running", {
     order_status: data.order_status,
   });
-  // console.log(result);
   return result;
 };
 

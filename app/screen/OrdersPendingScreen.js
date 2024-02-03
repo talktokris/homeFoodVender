@@ -157,12 +157,13 @@ import ModalOptionsPending from "../components/ModalOptionsPending";
 function OrdersPendingScreen({ navigation }) {
   const [orderData, setOrderData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getOrders = useApi(orderApi.getOrderPending);
   const [busy, setBusy] = useState(false);
   const [errorStatus, setErrorStatus] = useState(false);
   const [activeSalesId, setActiveSalesId] = useState(0);
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const getOrders = useApi(orderApi.getOrderPending);
 
   const {
     data: { data: getDataSet = [] },
@@ -341,6 +342,7 @@ function OrdersPendingScreen({ navigation }) {
 
   // console.log(getDataSet[0].id);
 
+  // console.log(getDataSet);
   return (
     <>
       <ActivityIndicator visible={busy} />
