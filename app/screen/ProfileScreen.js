@@ -87,7 +87,7 @@ function ProfileScreen({ route, navigation }) {
     );
 
     setLoading(false);
-    // console.log(result.data);
+    //  console.log(result.data);
     if (!result.ok) return;
     if (!result.data) {
       setEstatus(true);

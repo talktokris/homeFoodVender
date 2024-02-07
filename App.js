@@ -17,12 +17,15 @@ import navigationTheme from "./app/navigation/NavigationTheme";
 import AppNavigator from "./app/navigation/AppNavigator";
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import AuthContext from "./app/auth/context";
+import RetryNavigator from "./app/navigation/RetryNavigator";
+
 import authStorage from "./app/auth/storage";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState();
+  const [token, setToken] = useState();
   const [appIsReady, setAppIsReady] = useState(false);
 
   // App Loading Start
@@ -76,10 +79,17 @@ export default function App() {
 
   // App Loading end
 
+  function RenderComponent() {
+    if (token) return <RetryNavigator />;
+    else return <AuthNavigator />;
+  }
+
   return (
     <AuthContext.Provider value={[user, setUser]}>
       <NavigationContainer theme={navigationTheme}>
-        {user ? <AppNavigator /> : <AuthNavigator />}
+        {user ? <AppNavigator /> : RenderComponent()}
+        {/* {user ? <AppNavigator /> : <AuthNavigator />} */}
+
         {/* <AppNavigator /> */}
       </NavigationContainer>
     </AuthContext.Provider>

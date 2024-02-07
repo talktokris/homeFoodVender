@@ -29,7 +29,7 @@ const userProfileUpdate = async (
   last_name,
   email
 ) => {
-  const result = await client.post("/client-profile-update", {
+  const result = await client.post("/vender-profile-update", {
     name,
     location_lebel,
     first_name,
@@ -41,7 +41,7 @@ const userProfileUpdate = async (
 };
 
 const userPasswordChange = async (password, confirm_password) => {
-  const result = await client.post("/client-change-password", {
+  const result = await client.post("/vender-change-password", {
     password: password,
     c_password: confirm_password,
   });

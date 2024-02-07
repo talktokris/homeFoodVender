@@ -2,13 +2,12 @@ export default {
   serverUrl: "https://homefood.com.my/backend",
   apiUrl: "https://homefood.com.my/backend/api",
   imageUrl: "https://homefood.com.my/backend/vender_images",
-
   // serverUrl:
-  //   "http://192.168.254.5/projects/homefood/backend/homefood-backend/public",
+  //   "http://192.168.254.2/projects/homefood/backend/homefood-backend/public",
   // apiUrl:
-  //   "http://192.168.254.5/projects/homefood/backend/homefood-backend/public/api",
+  //   "http://192.168.254.2/projects/homefood/backend/homefood-backend/public/api",
   // imageUrl:
-  //   "http://192.168.254.5/projects/homefood/backend/homefood-backend/public/vender_images",
+  //   "http://192.168.254.2/projects/homefood/backend/homefood-backend/public/vender_images",
 };
 /*
 

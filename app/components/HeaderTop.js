@@ -40,7 +40,7 @@ function HeaderTop(props) {
 
 const styles = StyleSheet.create({
   screens: {
-    //paddingTop: Constants.statusBarHeight,
+    paddingTop: Constants.statusBarHeight,
     backgroundColor: colors.statusbarColor,
   },
   container: {
