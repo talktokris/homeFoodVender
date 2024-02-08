@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   screens: {
     paddingTop: Constants.statusBarHeight,
     backgroundColor: colors.statusbarColor,
+    color: colors.statusbarTextColor,
   },
   container: {
     backgroundColor: colors.statusbarColor,
