@@ -120,6 +120,7 @@ function FoodListingScreen({ route, navigation }) {
     setFetch(!fetch);
   };
 
+
   return (
     <>
       <ActivityIndicator visible={loading} />

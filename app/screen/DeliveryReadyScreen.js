@@ -20,6 +20,8 @@ import RetryComponent from "../components/RetryComponent";
 function DeliveryReadyScreen({ navigation }) {
   const [orderData, setOrderData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(false);
   const getOrders = useApi(orderApi.getOrderDeliverying);
 
   const {
@@ -32,7 +34,39 @@ function DeliveryReadyScreen({ navigation }) {
   const postData = { order_status: 11 };
 
   useEffect(() => {
-    getOrders.request(postData);
+    const responseData = navigation.addListener("focus", () => {
+      getOrders.request(postData);
+    });
+    return responseData;
+  }, [navigation]);
+
+  useEffect(() => {
+    // setBusy(getOrders.loading);
+    // console.log(JSON.stringify(getOrders.data.data[0].id));
+    setBusy(getOrders.loading);
+    setErrorStatus(getOrders.error);
+    setOrderData(getDataSet);
+  }, [getOrders.data]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      autoUpdateData();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const autoUpdateData = useCallback(() => {
+    orderApi
+      .getOrderDeliverying(postData)
+      .then((response) => {
+        if (response.ok) {
+          const newData = response.data.data;
+          setOrderData(newData);
+        }
+      })
+      .catch((error) => {});
   }, []);
 
   const onRefresh = () => {
@@ -164,7 +198,7 @@ function DeliveryReadyScreen({ navigation }) {
       <ActivityIndicator visible={loading} />
 
       <Screen>
-        {error ? (
+        {errorStatus ? (
           <RetryComponent
             onPress={() => getOrders.request(postData)}
             message=" Couldn't retrieve the orders."
@@ -179,9 +213,9 @@ function DeliveryReadyScreen({ navigation }) {
               />
             }
           >
-            {getDataSet.length >= 1 ? (
+            {orderData.length >= 1 ? (
               <View>
-                {getDataSet.map((item) => (
+                {orderData.map((item) => (
                   <RestaurantOrderDelivery
                     key={item.id.toString()}
                     id={item.id}

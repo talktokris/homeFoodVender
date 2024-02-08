@@ -246,12 +246,13 @@ const fetchVenderMenu = async (id) => {
 };
 
 const fetchSingleMenu = async (id) => {
-  // console.log(id);
+  //  console.log(id);
   const responce = await client.post("/vender-menu-fetch-single", {
     id: id,
   });
-  return responce;
   // console.log(responce.data);
+
+  return responce;
 };
 export default {
   createAddOn,

@@ -82,7 +82,6 @@ function OrderItemDelivery({
     setExtraData(newArray);
   };
 
-  console.log(statusData.integer_value + "-" + statusData.sting_value);
 
   return (
     <>

@@ -24,7 +24,7 @@ function OrdersActiveScreen({ navigation }) {
   const [busy, setBusy] = useState(false);
   const [errorStatus, setErrorStatus] = useState(false);
   const [activeSalesId, setActiveSalesId] = useState(0);
-
+  // const [getDataSet, getDataSetSet]
   const {
     data: { data: getDataSet = [] },
     error,
@@ -35,15 +35,40 @@ function OrdersActiveScreen({ navigation }) {
   const postData = { order_status: 3 };
 
   useEffect(() => {
-    getOrders.request(postData);
-  }, []);
+    const responseData = navigation.addListener("focus", () => {
+      getOrders.request(postData);
+    });
+    return responseData;
+  }, [navigation]);
 
   useEffect(() => {
     // setBusy(getOrders.loading);
     // console.log(JSON.stringify(getOrders.data.data[0].id));
     setBusy(getOrders.loading);
     setErrorStatus(getOrders.error);
+    setOrderData(getDataSet);
   }, [getOrders.data]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      autoUpdateData();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const autoUpdateData = useCallback(() => {
+    orderApi
+      .getOrderRunning(postData)
+      .then((response) => {
+        if (response.ok) {
+          const newData = response.data.data;
+          setOrderData(newData);
+        }
+      })
+      .catch((error) => {});
+  }, []);
 
   const onRefresh = () => {
     getOrders.request(postData);
@@ -99,9 +124,9 @@ function OrdersActiveScreen({ navigation }) {
               />
             }
           >
-            {getDataSet.length >= 1 ? (
+            {orderData.length >= 1 ? (
               <View>
-                {getDataSet.map((item) => (
+                {orderData.map((item) => (
                   <RestaurantOrderProcess
                     key={item.id.toString()}
                     id={item.id}
