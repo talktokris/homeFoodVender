@@ -72,7 +72,7 @@ const userAddressUpdate = async (
     postal_code,
   });
   return responce;
-  // console.log(responce.ok);
+  // console.log(responce.data);
 };
 
 export default {

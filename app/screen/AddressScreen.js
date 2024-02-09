@@ -19,6 +19,7 @@ import AppCheckBox from "../components/AppCheckBox";
 import AuthContext from "../auth/context";
 import routes from "../navigation/routes";
 import usersApi from "../api/users";
+import authStorage from "../auth/storage";
 import ActivityIndicator from "../components/ActivityIndicator";
 
 const stateData = [
@@ -55,6 +56,13 @@ function AddressScreen({ route, navigation }) {
   const [eStatus, setEstatus] = useState(false);
 
   const [isLoading, setLoading] = useState(false);
+
+  const restoreUser = async () => {
+    const user = await authStorage.getUser();
+    if (user) setUser(user);
+    // return user;
+  };
+
   const items =
     user.results[0].default_address != null
       ? user.results[0].default_address
@@ -62,35 +70,35 @@ function AddressScreen({ route, navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getData();
+      // getData();
     });
     return unsubscribe;
   }, [navigation]);
 
-  const getData = useCallback(() => {
-    setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
-    usersApi
-      .userRefresh()
-      .then((data) => {
-        // console.log(data.data);
-        if (data.ok) {
-          setLoading(false);
-          setUser(data.data);
-          if (data.data.results[0].default_address != null) {
-            setDefaultAddress(data.data.results[0].default_address);
-          }
-        } else {
-          setError(
-            "Unable to get the database. Please check your internet connection"
-          );
-          setEstatus(true);
-        }
-      })
-      .catch((error) => {
-        // display error
-        setLoading(false); // stop the loader
-      });
-  }, []);
+  // const getData = useCallback(() => {
+  //   setLoading(true); // Start the loader, So when you start fetching data, you can display loading UI
+  //   usersApi
+  //     .userRefresh()
+  //     .then((data) => {
+  //       // console.log(data.data);
+  //       if (data.ok) {
+  //         setLoading(false);
+  //         setUser(data.data);
+  //         if (data.data.results[0].default_address != null) {
+  //           setDefaultAddress(data.data.results[0].default_address);
+  //         }
+  //       } else {
+  //         setError(
+  //           "Unable to get the database. Please check your internet connection"
+  //         );
+  //         setEstatus(true);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       // display error
+  //       setLoading(false); // stop the loader
+  //     });
+  // }, []);
 
   const handleSubmit = async ({
     address,
@@ -110,7 +118,7 @@ function AddressScreen({ route, navigation }) {
       postal_code
     );
     // const tokenSet= result.access_token;
-    //  console.log(result.data);
+    // console.log(result.data);
     //console.log("==================");
     setLoading(false);
 
@@ -125,13 +133,15 @@ function AddressScreen({ route, navigation }) {
       setEstatus(true);
       setError(result.data.message);
     } else if (result.data.success == true) {
-      getData();
+      // getData();
       const { data: id, message: messageSend } = result.data;
+
+      restoreUser();
 
       Alert.alert("Success", messageSend, [
         {
           text: "Ok",
-          onPress: () => navigation.navigate(routes.ACCOUNT_MENU),
+          onPress: () => navigation.goBack(),
         },
       ]);
       // navigation.navigate(routes.PRO_DONE, {
@@ -162,7 +172,7 @@ function AddressScreen({ route, navigation }) {
                 street: items.street,
                 city_name: items.city_name,
                 state: stateSelectedItem,
-                postal_code: "" + items.postal_code + "",
+                postal_code: items.postal_code.toString(),
               }}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}
@@ -221,7 +231,7 @@ function AddressScreen({ route, navigation }) {
                     autoCapitalize="none"
                     autoCorrect={false}
                     placeholder=" Postal Code"
-                    textContentType="name"
+                    textContentType="postalCode"
                     secureTextEntry={false}
                     maxLength={7}
                   />
