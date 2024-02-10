@@ -591,18 +591,7 @@ function FoodOptionsScreen({ route, navigation }) {
                               size={25}
                               color={colors.secondary}
                               onPress={() => {
-                                Alert.alert(
-                                  "Delete",
-                                  "Are you sure you want to delete this title?",
-                                  [
-                                    {
-                                      text: "Yes",
-                                      onPress: () =>
-                                        handleMenumenuData(op, menuData),
-                                    },
-                                    { text: "No" },
-                                  ]
-                                );
+                                handleMenumenuData(op, menuData);
                               }}
                             />
                           </View>

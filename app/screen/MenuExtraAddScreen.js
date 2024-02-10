@@ -21,7 +21,7 @@ import menuApi from "../api/menu";
 import routes from "../navigation/routes";
 
 const validationSchema = Yup.object().shape({
-  description: Yup.string().required().min(4).max(200).label("Description"),
+  description: Yup.string().required().min(2).max(200).label("Description"),
   vender_price: Yup.number().required().integer().label("Vender Price"),
   customer_price: Yup.number().required().integer().label("Customer Price"),
   status: Yup.object().required().nullable().label("Active Status"),
@@ -148,6 +148,7 @@ function MenuExtraAddScreen({ route, navigation }) {
               secureTextEntry={false}
               maxLength={100}
               editable={false}
+              style={styles.redOnly}
             />
 
             <AppFormField
@@ -164,16 +165,31 @@ function MenuExtraAddScreen({ route, navigation }) {
 
           <View style={styles.otp}>
             <View style={styles.viewHalf}>
-              <AppFormField
-                name="vender_price"
-                autoCapitalize="none"
-                autoCorrect={false}
-                placeholder="Vender Price"
-                textContentType="text"
-                secureTextEntry={false}
-                maxLength={6}
-                onChange={(text) => venderPriceHandle(text)}
-              />
+              {heading.pick_type ? (
+                <AppFormField
+                  name="vender_price"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder="Vender Price"
+                  textContentType="text"
+                  secureTextEntry={false}
+                  maxLength={6}
+                  editable={false}
+                  style={styles.redOnly}
+                  onChange={(text) => venderPriceHandle(text)}
+                />
+              ) : (
+                <AppFormField
+                  name="vender_price"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder="Vender Price"
+                  textContentType="text"
+                  secureTextEntry={false}
+                  maxLength={6}
+                  onChange={(text) => venderPriceHandle(text)}
+                />
+              )}
             </View>
             <View style={styles.viewHalf}>
               <AppFormField
@@ -232,6 +248,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "800",
   },
+  redOnly: { color: "#cccccc", padding: 6 },
 });
 
 export default MenuExtraAddScreen;

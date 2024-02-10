@@ -33,7 +33,7 @@ function MenuExtraEditScreen({ route, navigation }) {
   const menuData = route.params.menu;
   const menu = menuData[0];
   const extraData = route.params.extraData;
-  // console.log(extraData);
+
   const heading = route.params.heading;
 
   const [venderPrice, setVenderPrice] = useState(
@@ -158,6 +158,7 @@ function MenuExtraEditScreen({ route, navigation }) {
               textContentType="name"
               secureTextEntry={false}
               maxLength={100}
+              style={styles.redOnly}
               editable={false}
             />
 
@@ -175,16 +176,31 @@ function MenuExtraEditScreen({ route, navigation }) {
 
           <View style={styles.otp}>
             <View style={styles.viewHalf}>
-              <AppFormField
-                name="vender_price"
-                autoCapitalize="none"
-                autoCorrect={false}
-                placeholder="Vender Price"
-                textContentType="text"
-                secureTextEntry={false}
-                maxLength={6}
-                onChange={(text) => venderPriceHandle(text)}
-              />
+              {heading.pick_type ? (
+                <AppFormField
+                  name="vender_price"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder="Vender Price"
+                  textContentType="text"
+                  secureTextEntry={false}
+                  maxLength={6}
+                  style={styles.redOnly}
+                  editable={false}
+                  onChange={(text) => venderPriceHandle(text)}
+                />
+              ) : (
+                <AppFormField
+                  name="vender_price"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  placeholder="Vender Price"
+                  textContentType="text"
+                  secureTextEntry={false}
+                  maxLength={6}
+                  onChange={(text) => venderPriceHandle(text)}
+                />
+              )}
             </View>
             <View style={styles.viewHalf}>
               <AppFormField
@@ -243,6 +259,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "800",
   },
+  redOnly: { color: "#cccccc", padding: 6 },
 });
 
 export default MenuExtraEditScreen;

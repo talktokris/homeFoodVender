@@ -19,7 +19,7 @@ function AppCheckBoxCustom({ text, price, data, onEdit, onRemove }) {
         />
       </View>
       <View style={styles.checkPrice}>
-        {price && <AppText style={styles.textPrice}> +{price}</AppText>}
+        {price >= 0.1 && <AppText style={styles.textPrice}> +{price}</AppText>}
         <AppCircleButton
           icon="delete"
           size={20}
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "400",
     color: colors.medium,
   },

@@ -19,7 +19,8 @@ function AppRadioCustom({ text, price, data, onEdit, onRemove }) {
         />
       </View>
       <View style={styles.checkPrice}>
-        {/* {price && <AppText style={styles.textPrice}> +{price}</AppText>} */}
+        {price >= 0.1 && <AppText style={styles.textPrice}> +{price}</AppText>}
+
         <AppCircleButton
           icon="delete"
           size={20}
@@ -40,8 +41,7 @@ const styles = StyleSheet.create({
   },
   checkBoxArea: {
     flexDirection: "row",
-    width: "90%",
-    paddingTop: 5,
+    width: "75%",
     alignItems: "center",
   },
   text: {
@@ -49,11 +49,16 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: colors.medium,
   },
-  checkPrice: {},
+  checkPrice: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    width: "20%",
+  },
   textPrice: {
     fontSize: 14,
     fontWeight: "600",
-    color: colors.medium,
+    color: colors.orangeDark,
     textAlign: "right",
     paddingRight: 20,
   },
