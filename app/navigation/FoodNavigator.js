@@ -20,6 +20,8 @@ import MenuTitleEditScreen from "../screen/MenuTitleEditScreen";
 import MenuExtraAddScreen from "../screen/MenuExtraAddScreen";
 import MenuExtraEditScreen from "../screen/MenuExtraEditScreen";
 import MenuImageUplaodScreen from "../screen/MenuImageUplaodScreen";
+import MessagesScreen from "../screen/MessagesScreen";
+import MessagesViewScreen from "../screen/MessagesViewScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +52,8 @@ const FoodNavigator = () => (
     <Stack.Screen name="Add Extra" component={MenuExtraAddScreen} />
     <Stack.Screen name="Edit Extra" component={MenuExtraEditScreen} />
     <Stack.Screen name="Done" component={ComplitedScreen} />
+    <Stack.Screen name="Messages" component={MessagesScreen} />
+    <Stack.Screen name="Message View" component={MessagesViewScreen} />
   </Stack.Navigator>
 );
 

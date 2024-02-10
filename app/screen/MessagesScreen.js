@@ -24,6 +24,9 @@ import RetryComponent from "../components/RetryComponent";
 
 function MessagesScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
+  const [orderData, setOrderData] = useState([]);
+  const [busy, setBusy] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(false);
   const getMessage = useApi(useMessage.fetchMessage);
 
   const {
@@ -32,13 +35,49 @@ function MessagesScreen({ navigation }) {
     loading,
   } = getMessage;
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
-    getMessage.request();
-  }, []);
+    const responseData = navigation.addListener("focus", () => {
+      getMessage.request();
+    });
+    return responseData;
+  }, [navigation]);
 
   // useEffect(() => {
   //   setOrderData(getDataSet);
   // }, [getMessage.data]);
+
+  useEffect(() => {
+    // setBusy(getOrders.loading);
+    // console.log(JSON.stringify(getOrders.data.data[0].id));
+    setBusy(getMessage.loading);
+    setErrorStatus(getMessage.error);
+    setOrderData(messageData);
+  }, [getMessage.data]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      autoUpdateData();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const autoUpdateData = useCallback(() => {
+    useMessage
+      .fetchMessage()
+      .then((response) => {
+        if (response.ok) {
+          // console.log("Hi");
+          // console.log(response.data.data);
+          const newData = response.data.data;
+          setOrderData(newData);
+        }
+      })
+      .catch((error) => {});
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -51,24 +90,25 @@ function MessagesScreen({ navigation }) {
 
   return (
     <>
-      <ActivityIndicator visible={loading} />
+      <ActivityIndicator visible={busy} />
       <Screen style={styles.screen}>
-        {error && (
+        {errorStatus && (
           <RetryComponent
-            onPress={() => getOrders.request()}
+            onPress={() => getMessage.request()}
             message=" Couldn't retrieve the messages."
           />
         )}
 
-        {messageData.length >= 1 ? (
+        {orderData.length >= 1 ? (
           <FlatList
-            data={messageData}
+            data={orderData}
             keyExtractor={(message) => message.id.toString()}
             renderItem={({ item }) => (
               <MessageItem
                 title={item.title}
                 subTitle={item.message}
                 date={item.humanDate}
+                readStatus={item.seen}
                 iconComponent={
                   <Icon
                     name="email-outline"
@@ -79,7 +119,7 @@ function MessagesScreen({ navigation }) {
                 }
                 // onPress={() => console.log("Message Selected:- " + item.id)}
                 onPress={() =>
-                  navigation.navigate(routes.MESSAGE_VIEW, { item })
+                  navigation.navigate(routes.ACCOUNT_MESSAGE_VIEW, { item })
                 }
                 renderRightActions={() => (
                   <View style={{ backgroundColor: "red", height: 70 }}></View>

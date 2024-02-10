@@ -4,7 +4,16 @@ import colors from "../config/colors";
 import AppText from "./AppText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-function ListItem({ title, subTitle, date, iconComponent, image, onPress }) {
+function ListItem({
+  title,
+  subTitle,
+  date,
+  readStatus,
+  iconComponent,
+  image,
+  onPress,
+}) {
+  // console.log(readStatus);
   return (
     <TouchableHighlight underlayColor={colors.lightGray} onPress={onPress}>
       <>
@@ -14,8 +23,21 @@ function ListItem({ title, subTitle, date, iconComponent, image, onPress }) {
           </AppText>
         </View>
         <View style={styles.container}>
-          {iconComponent}
-          {image && <Image style={styles.image} source={{ uri: image }} />}
+          {/* {iconComponent} */}
+          {/* {image && <Image style={styles.image} source={{ uri: image }} />} */}
+          {readStatus ? (
+            <MaterialCommunityIcons
+              name="email-open"
+              size={27}
+              color={colors.statusbarTextColor}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name="email"
+              size={27}
+              color={colors.orangeDark}
+            />
+          )}
           <View style={styles.appTextContainer}>
             <View style={styles.titleBlock}>
               <AppText style={styles.title} numberOfLines={1}>

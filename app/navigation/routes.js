@@ -31,6 +31,7 @@ export default Object.freeze({
   ACCOUNT_ADDRESS: "Address",
   ACCOUNT_SALES_STATEMENT: "Earning Statement",
   ACCOUNT_MESSAGES: "Messages",
+  ACCOUNT_MESSAGE_VIEW: "Message View",
   ACCOUNT_SEARCH_RADIUS: "Search Radius",
   ACCOUNT_ORDER_HISTORY: "Sales History",
   ACCOUNT_SUPPORT: "Support",

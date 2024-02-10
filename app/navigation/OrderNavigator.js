@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import OrdersPendingScreen from "../screen/OrdersPendingScreen";
 import FoodTrackingScreen from "../screen/FoodTrackingScreen";
+import MessagesScreen from "../screen/MessagesScreen";
+import MessagesViewScreen from "../screen/MessagesViewScreen";
 
 import HeaderTop from "../components/HeaderTop";
 
@@ -26,6 +28,8 @@ const OrderNavigator = () => (
   >
     <Stack.Screen name="Pending Orders" component={OrdersPendingScreen} />
     <Stack.Screen name="Order Tracking" component={FoodTrackingScreen} />
+    <Stack.Screen name="Messages" component={MessagesScreen} />
+    <Stack.Screen name="Message View" component={MessagesViewScreen} />
   </Stack.Navigator>
 );
 

@@ -6,7 +6,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "../screen/HomeScreen";
 import OrdersActiveScreen from "../screen/OrdersActiveScreen";
-
+import MessagesScreen from "../screen/MessagesScreen";
+import MessagesViewScreen from "../screen/MessagesViewScreen";
 
 import HeaderTop from "../components/HeaderTop";
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,8 @@ const HomeNavigator = () => (
     }}
   >
     <Stack.Screen name="Services on Process" component={OrdersActiveScreen} />
+    <Stack.Screen name="Messages" component={MessagesScreen} />
+    <Stack.Screen name="Message View" component={MessagesViewScreen} />
   </Stack.Navigator>
 );
 

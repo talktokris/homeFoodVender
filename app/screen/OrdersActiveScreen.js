@@ -20,11 +20,13 @@ import RetryComponent from "../components/RetryComponent";
 function OrdersActiveScreen({ navigation }) {
   const [orderData, setOrderData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getOrders = useApi(orderApi.getOrderRunning);
   const [busy, setBusy] = useState(false);
   const [errorStatus, setErrorStatus] = useState(false);
   const [activeSalesId, setActiveSalesId] = useState(0);
   // const [getDataSet, getDataSetSet]
+
+  const getOrders = useApi(orderApi.getOrderRunning);
+
   const {
     data: { data: getDataSet = [] },
     error,
@@ -106,10 +108,10 @@ function OrdersActiveScreen({ navigation }) {
 
   return (
     <>
-      <ActivityIndicator visible={loading} />
+      <ActivityIndicator visible={busy} />
 
       <Screen>
-        {error ? (
+        {errorStatus ? (
           <RetryComponent
             onPress={() => getOrders.request(postData)}
             message=" Couldn't retrieve the orders."

@@ -158,11 +158,11 @@ const AppNavigator = (color = "blue") => {
           headerRight: () => (
             <TopMenu
               name="email"
-              onPress={() => console.log("hi")}
               title="Update count"
+              onPress={() => console.log("Clicked")}
             />
           ),
-          headerLeft: () => <IconBtn />,
+          // headerLeft: () => <IconBtn />,
           headerTintColor: colors.lightGray,
           headerStyle: {
             backgroundColor: colors.lightGray,

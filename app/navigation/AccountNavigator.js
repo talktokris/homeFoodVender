@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AccountScreen from "../screen/AccountScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 import MessagesScreen from "../screen/MessagesScreen";
+import MessagesViewScreen from "../screen/MessagesViewScreen";
+
 import SearchRadiusScreen from "../screen/SearchRadiusScreen";
 import OrdersHistoryScreen from "../screen/OrdersHistoryScreen";
 import SupportScreen from "../screen/SupportScreen";
@@ -35,7 +37,10 @@ const AccountNavigator = () => (
     <Stack.Screen name="Earning Statement" component={SalesStatementScreen} />
 
     <Stack.Screen name="Profile" component={ProfileScreen} />
+
     <Stack.Screen name="Messages" component={MessagesScreen} />
+    <Stack.Screen name="Message View" component={MessagesViewScreen} />
+
     <Stack.Screen name="Search Radius" component={SearchRadiusScreen} />
     <Stack.Screen name="Sales History" component={OrdersHistoryScreen} />
     <Stack.Screen name="Support" component={SupportScreen} />

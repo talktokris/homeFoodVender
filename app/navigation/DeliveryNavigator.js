@@ -5,6 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import DeliveryReadyScreen from "../screen/DeliveryReadyScreen";
+import MessagesScreen from "../screen/MessagesScreen";
+import MessagesViewScreen from "../screen/MessagesViewScreen";
 
 import HeaderTop from "../components/HeaderTop";
 
@@ -25,6 +27,8 @@ const DeliveryNavigator = () => (
     }}
   >
     <Stack.Screen name="Ready for Delivery" component={DeliveryReadyScreen} />
+    <Stack.Screen name="Messages" component={MessagesScreen} />
+    <Stack.Screen name="Message View" component={MessagesViewScreen} />
   </Stack.Navigator>
 );
 
