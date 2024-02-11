@@ -60,6 +60,7 @@ function FoodOptionsScreen({ route, navigation }) {
 
   useEffect(() => {
     const responseData = navigation.addListener("focus", () => {
+      setLoading(true);
       getFetchData.request(menuID);
     });
     return responseData;
@@ -68,10 +69,10 @@ function FoodOptionsScreen({ route, navigation }) {
   useEffect(() => {
     if (foodData.length >= 1) {
       setMenuData(foodData);
-      // console.log(foodData[0]);
       setTotalPrice(foodData[0].customer_price);
       setOptions(foodData[0].arguments);
     }
+    setLoading(getFetchData.loading);
 
     // setMemuFilttred(foodData);
   }, [getFetchData.data]);
@@ -82,7 +83,7 @@ function FoodOptionsScreen({ route, navigation }) {
 
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 4000);
   }, []);
 
   const onReTry = () => {
@@ -460,166 +461,167 @@ function FoodOptionsScreen({ route, navigation }) {
                   {eStatus && (
                     <ErrorMessage error={errorMsg} visible={eStatus} />
                   )}
-                  {options.map((op) =>
-                    op.pick_type ? (
-                      <View
-                        key={op.id.toString()}
-                        style={[styles.container, { flexDirection: "column" }]}
-                      >
-                        <View style={styles.titleContainer}>
-                          <AppText style={styles.headingSmall}>
-                            {op.title}
-                          </AppText>
-                          <AppText style={styles.textPd}>Pick 1</AppText>
-                          <View style={styles.optionBtns}>
-                            <AppCircleButton
-                              icon="pencil"
-                              size={20}
-                              color={colors.orangeDark}
-                              onPress={() => {
-                                navigation.navigate(routes.MENU_TITLE_EDIT, {
-                                  menu: menuData,
-                                  fethcID: fethcID,
-                                  heading: op,
-                                });
-                              }}
-                            />
+                  {options.length >= 1 &&
+                    options.map((op) =>
+                      op.pick_type ? (
+                        <View
+                          key={op.id.toString()}
+                          style={styles.containerOptions}
+                        >
+                          <View style={styles.titleContainer}>
+                            <AppText style={styles.headingSmall}>
+                              {op.title}
+                            </AppText>
+                            <AppText style={styles.textPd}>Pick 1</AppText>
+                            <View style={styles.optionBtns}>
+                              <AppCircleButton
+                                icon="pencil"
+                                size={20}
+                                color={colors.orangeDark}
+                                onPress={() => {
+                                  navigation.navigate(routes.MENU_TITLE_EDIT, {
+                                    menu: menuData,
+                                    fethcID: fethcID,
+                                    heading: op,
+                                  });
+                                }}
+                              />
 
-                            <AppCircleButton
-                              icon="delete"
-                              size={20}
-                              color={colors.primary}
-                              onPress={() => {
-                                Alert.alert(
-                                  "Delete",
-                                  "Are you sure you want to delete this menu?",
-                                  [
-                                    {
-                                      text: "Yes",
-                                      onPress: () => handleTitleRemove(op),
-                                    },
-                                    { text: "No" },
-                                  ]
-                                );
-                                // handleTitleRemove(op);
-                              }}
-                            />
+                              <AppCircleButton
+                                icon="delete"
+                                size={20}
+                                color={colors.primary}
+                                onPress={() => {
+                                  Alert.alert(
+                                    "Delete",
+                                    "Are you sure you want to delete this menu?",
+                                    [
+                                      {
+                                        text: "Yes",
+                                        onPress: () => handleTitleRemove(op),
+                                      },
+                                      { text: "No" },
+                                    ]
+                                  );
+                                  // handleTitleRemove(op);
+                                }}
+                              />
+                            </View>
+
+                            <View style={styles.imageUpdateBtn}>
+                              <AppCircleButton
+                                key={op.id.toString()}
+                                icon="plus-circle"
+                                size={25}
+                                color={colors.secondary}
+                                onPress={() => handleMenumenuData(op, menuData)}
+                              />
+                            </View>
                           </View>
 
-                          <View style={styles.imageUpdateBtn}>
-                            <AppCircleButton
-                              key={op.id.toString()}
-                              icon="plus-circle"
-                              size={25}
-                              color={colors.secondary}
-                              onPress={() => handleMenumenuData(op, menuData)}
-                            />
+                          <View style={styles.optionsContainer}>
+                            {op.list.map((m) => (
+                              <AppRadioCustom
+                                key={m.id.toString()}
+                                text={m.description}
+                                price={m.price}
+                                data={m}
+                                onEdit={() => {
+                                  navigation.navigate(routes.MENU_EXTRA_EDIT, {
+                                    menu: menuData,
+                                    heading: op,
+                                    extraData: m,
+                                  });
+                                }}
+                                onRemove={() => {
+                                  handlemenuDataRemove(m, menuData);
+                                }}
+
+                                // onCheck={onCheck}
+                              />
+                            ))}
                           </View>
                         </View>
+                      ) : (
+                        <View
+                          key={op.id.toString()}
+                          style={styles.containerOptions}
+                        >
+                          <View style={styles.titleContainer}>
+                            <AppText style={styles.headingSmall}>
+                              {op.title}{" "}
+                            </AppText>
+                            <AppText style={styles.textPd}></AppText>
+                            <View style={styles.optionBtns}>
+                              <AppCircleButton
+                                icon="pencil"
+                                size={20}
+                                color={colors.orangeDark}
+                                onPress={() => {
+                                  navigation.navigate(routes.MENU_TITLE_EDIT, {
+                                    menu: menuData,
+                                    heading: op,
+                                  });
+                                }}
+                              />
 
-                        <View style={styles.optionsContainer}>
-                          {op.list.map((m) => (
-                            <AppRadioCustom
-                              key={m.id.toString()}
-                              text={m.description}
-                              price={m.price}
-                              data={m}
-                              onEdit={() => {
-                                navigation.navigate(routes.MENU_EXTRA_EDIT, {
-                                  menu: menuData,
-                                  heading: op,
-                                  extraData: m,
-                                });
-                              }}
-                              onRemove={() => {
-                                handlemenuDataRemove(m, menuData);
-                              }}
+                              <AppCircleButton
+                                icon="delete"
+                                size={20}
+                                color={colors.primary}
+                                onPress={() => {
+                                  Alert.alert(
+                                    "Delete",
+                                    "Are you sure you want to delete this menu?",
+                                    [
+                                      {
+                                        text: "Yes",
+                                        onPress: () => handleTitleRemove(op),
+                                      },
+                                      { text: "No" },
+                                    ]
+                                  );
 
-                              // onCheck={onCheck}
-                            />
-                          ))}
-                        </View>
-                      </View>
-                    ) : (
-                      <View
-                        key={op.id.toString()}
-                        style={[styles.container, { flexDirection: "column" }]}
-                      >
-                        <View style={styles.titleContainer}>
-                          <AppText style={styles.headingSmall}>
-                            {op.title}{" "}
-                          </AppText>
-                          <AppText style={styles.textPd}></AppText>
-                          <View style={styles.optionBtns}>
-                            <AppCircleButton
-                              icon="pencil"
-                              size={20}
-                              color={colors.orangeDark}
-                              onPress={() => {
-                                navigation.navigate(routes.MENU_TITLE_EDIT, {
-                                  menu: menuData,
-                                  heading: op,
-                                });
-                              }}
-                            />
-
-                            <AppCircleButton
-                              icon="delete"
-                              size={20}
-                              color={colors.primary}
-                              onPress={() => {
-                                Alert.alert(
-                                  "Delete",
-                                  "Are you sure you want to delete this menu?",
-                                  [
-                                    {
-                                      text: "Yes",
-                                      onPress: () => handleTitleRemove(op),
-                                    },
-                                    { text: "No" },
-                                  ]
-                                );
-
-                                // handleTitleRemove(op);
-                              }}
-                            />
+                                  // handleTitleRemove(op);
+                                }}
+                              />
+                            </View>
+                            <View style={styles.imageUpdateBtn}>
+                              <AppCircleButton
+                                icon="plus-circle"
+                                key={op.id.toString()}
+                                size={25}
+                                color={colors.secondary}
+                                onPress={() => {
+                                  handleMenumenuData(op, menuData);
+                                }}
+                              />
+                            </View>
                           </View>
-                          <View style={styles.imageUpdateBtn}>
-                            <AppCircleButton
-                              icon="plus-circle"
-                              key={op.id.toString()}
-                              size={25}
-                              color={colors.secondary}
-                              onPress={() => {
-                                handleMenumenuData(op, menuData);
-                              }}
-                            />
+
+                          <View style={styles.optionsContainer}>
+                            {op.list.map((n) => (
+                              <AppCheckBoxCustom
+                                key={n.id.toString()}
+                                text={n.description}
+                                price={n.price}
+                                data={n}
+                                onEdit={() => {
+                                  navigation.navigate(routes.MENU_EXTRA_EDIT, {
+                                    menu: menuData,
+                                    heading: op,
+                                    extraData: n,
+                                  });
+                                }}
+                                onRemove={() => {
+                                  handlemenuDataRemove(n, menuData);
+                                }}
+                              />
+                            ))}
                           </View>
                         </View>
-
-                        <View style={styles.optionsContainer}>
-                          {op.list.map((n) => (
-                            <AppCheckBoxCustom
-                              key={n.id.toString()}
-                              text={n.description}
-                              price={n.price}
-                              data={n}
-                              onEdit={() => {
-                                navigation.navigate(routes.MENU_EXTRA_EDIT, {
-                                  menu: menuData,
-                                  heading: op,
-                                  extraData: n,
-                                });
-                              }}
-                              onRemove={() => {
-                                handlemenuDataRemove(n, menuData);
-                              }}
-                            />
-                          ))}
-                        </View>
-                      </View>
-                    )
-                  )}
+                      )
+                    )}
                 </View>
               </>
             )}
@@ -651,11 +653,19 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     paddingBottom: 5,
   },
+  containerOptions: {
+    marginVertical: 5,
+    backgroundColor: "#f7f7f7",
+    shadowColor: "#c4c2c2",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    paddingBottom: 5,
+  },
 
   foodContainer: { flex: 1, flexDirection: "row" },
   headContainer: { padding: 10, width: "75%" },
   priceContainer: {
-    flexDirection: "column",
     with: "25%",
     padding: 10,
   },
@@ -704,7 +714,6 @@ const styles = StyleSheet.create({
   },
   titleContainer: { flexDirection: "row" },
   optionsContainer: {
-    flexDirection: "column",
     paddingLeft: 10,
     paddingTop: 10,
   },

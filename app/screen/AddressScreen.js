@@ -172,7 +172,7 @@ function AddressScreen({ route, navigation }) {
                 street: items.street,
                 city_name: items.city_name,
                 state: stateSelectedItem,
-                postal_code: items.postal_code.toString(),
+                postal_code: items.postal_code,
               }}
               onSubmit={handleSubmit}
               validationSchema={validationSchema}

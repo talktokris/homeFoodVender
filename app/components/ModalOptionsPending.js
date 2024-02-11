@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(52, 52, 52, 0.7)",

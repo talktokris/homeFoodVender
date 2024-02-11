@@ -41,6 +41,8 @@ function FoodListingScreen({ route, navigation }) {
   const currrentUser = user.results ? user.results[0].id : 0;
   const fethcID = currrentUser;
   // const [fetch, setFetch] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [errorStatus, setErrorStatus] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const [memuFilttred, setMemuFilttred] = useState([]);
   const [resultText, setResultText] = useState("");
@@ -67,15 +69,22 @@ function FoodListingScreen({ route, navigation }) {
 
   useEffect(() => {
     const responseData = navigation.addListener("focus", () => {
+      setBusy(true);
       getFetchData.request(fethcID);
     });
     return responseData;
   }, [navigation]);
 
   useEffect(() => {
+    setBusy(foodData.loading);
+    setErrorStatus(foodData.error);
+
     setRestData(venderData);
+
     setMenuData(foodData);
+
     setMemuFilttred(foodData);
+    // console.log(foodData);
   }, [getFetchData.data]);
 
   const onRefresh = useCallback(() => {
@@ -84,7 +93,7 @@ function FoodListingScreen({ route, navigation }) {
 
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 5000);
   }, []);
 
   const onReTry = () => {
@@ -120,15 +129,14 @@ function FoodListingScreen({ route, navigation }) {
     setFetch(!fetch);
   };
 
-
   return (
     <>
-      <ActivityIndicator visible={loading} />
+      <ActivityIndicator visible={busy} />
       <Screen>
-        {error ? (
+        {errorStatus ? (
           <RetryComponent
             onPress={onReTry}
-            message=" Couldn't retrieve the menu data."
+            message={" Couldn't retrieve the menu data."}
           />
         ) : (
           <ScrollView

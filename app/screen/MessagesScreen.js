@@ -39,6 +39,7 @@ function MessagesScreen({ navigation }) {
 
   useEffect(() => {
     const responseData = navigation.addListener("focus", () => {
+      setBusy(true);
       getMessage.request();
     });
     return responseData;
@@ -52,7 +53,8 @@ function MessagesScreen({ navigation }) {
     // setBusy(getOrders.loading);
     // console.log(JSON.stringify(getOrders.data.data[0].id));
     setBusy(getMessage.loading);
-    setErrorStatus(getMessage.error);
+    // setErrorStatus(getMessage.error);
+
     setOrderData(messageData);
   }, [getMessage.data]);
 

@@ -63,7 +63,7 @@ function FoodGridItem({
             {title}
           </AppText>
           <View style={{ marginLeft: 5 }}>
-            <Price price={price} oldPrice={oldPrice} size={14} />
+            <Price price={price} oldPrice={oldPrice} size={12} />
           </View>
         </View>
       </View>
@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   content: {
-    flexDirection: "column",
     justifyContent: "center",
 
     // backgroundColor: "red",

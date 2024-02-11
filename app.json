@@ -2,7 +2,7 @@
   "expo": {
     "name": "Home Food Service",
     "slug": "home-food-service-app",
-    "version": "1.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "userInterfaceStyle": "light",
@@ -20,11 +20,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.homefoodservicesbykris.homefoodservice",
-      "buildNumber": "1.0.0"
+      "buildNumber": "3.0.0"
     },
     "android": {
       "package": "com.homefoodservicesbykris.homefoodservice",
-      "versionCode": 1,
+      "versionCode": 30,
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

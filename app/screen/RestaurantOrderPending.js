@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
   },
 
   restContainer: {
-    flexDirection: "column",
     marginLeft: 15,
     marginRight: 15,
     backgroundColor: "#f7f7f7",
@@ -150,7 +149,6 @@ const styles = StyleSheet.create({
   },
 
   restItem: {
-    flexDirection: "column",
     paddingTop: 5,
     PaddingBottom: 10,
     borderBottomWidth: 1,

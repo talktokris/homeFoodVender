@@ -176,6 +176,8 @@ function OrdersPendingScreen({ navigation }) {
 
   useEffect(() => {
     const responseData = navigation.addListener("focus", () => {
+      setBusy(true);
+
       getOrders.request(postData);
     });
     return responseData;
@@ -186,13 +188,14 @@ function OrdersPendingScreen({ navigation }) {
     // console.log(JSON.stringify(getOrders.data.data[0].id));
     setBusy(getOrders.loading);
     setErrorStatus(getOrders.error);
+
     setOrderData(getDataSet);
   }, [getOrders.data]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       autoUpdateData();
-    }, 5000);
+    }, 8000);
     return () => {
       clearInterval(interval);
     };
@@ -216,7 +219,7 @@ function OrdersPendingScreen({ navigation }) {
 
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 4000);
   };
 
   const onModelSelect = async (saleId, value) => {
@@ -272,28 +275,30 @@ function OrdersPendingScreen({ navigation }) {
               />
             }
           >
-            {orderData.length >= 1 ? (
-              <View>
-                {orderData.map((item) => (
-                  <RestaurantOrderPending
-                    key={item.id.toString()}
-                    id={item.id}
-                    vData={item.vender}
-                    oData={item.orders}
-                    orderStatus={item.order_string_value}
-                    tPrice={item.customer_amount}
-                    onAction={() => {
-                      setActiveSalesId(item.id);
-                      setModalVisible(true);
-                    }}
-                  />
-                ))}
-              </View>
-            ) : (
-              <View style={styles.noItemBox}>
-                <AppText style={styles.noItemText}>No Orders found</AppText>
-              </View>
-            )}
+            <View>
+              {orderData.length >= 1 ? (
+                <View>
+                  {orderData.map((item) => (
+                    <RestaurantOrderPending
+                      key={item.id.toString()}
+                      id={item.id}
+                      vData={item.vender}
+                      oData={item.orders}
+                      orderStatus={item.order_string_value}
+                      tPrice={item.customer_amount}
+                      onAction={() => {
+                        setActiveSalesId(item.id);
+                        setModalVisible(true);
+                      }}
+                    />
+                  ))}
+                </View>
+              ) : (
+                <View style={styles.noItemBox}>
+                  <AppText style={styles.noItemText}>No Orders found</AppText>
+                </View>
+              )}
+            </View>
           </ScrollView>
         )}
       </Screen>

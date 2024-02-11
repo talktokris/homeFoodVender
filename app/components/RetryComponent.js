@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
   retryView: {
     flex: 1,
     justifyContent: "center",
-    flexDirection: "center",
     margin: 50,
   },
   noMsgFound: {

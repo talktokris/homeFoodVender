@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: Platform.OS === "android" ? fonts.android : fonts.ios,
     color: colors.secondary,
-    padding: Platform.OS === "android" ? 7 : 5,
+    padding: Platform.OS === "android" ? 0 : 5,
   },
   text: {
     flex: 1,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     paddingLeft: 10,
-    padding: Platform.OS === "android" ? 7 : 5,
+    padding: Platform.OS === "android" ? 0 : 5,
   },
   icon: {
     marginRight: 10,

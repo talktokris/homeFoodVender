@@ -45,13 +45,14 @@ function DeliveryReadyScreen({ navigation }) {
     // console.log(JSON.stringify(getOrders.data.data[0].id));
     setBusy(getOrders.loading);
     setErrorStatus(getOrders.error);
+
     setOrderData(getDataSet);
   }, [getOrders.data]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       autoUpdateData();
-    }, 5000);
+    }, 15000);
     return () => {
       clearInterval(interval);
     };
@@ -213,25 +214,27 @@ function DeliveryReadyScreen({ navigation }) {
               />
             }
           >
-            {orderData.length >= 1 ? (
-              <View>
-                {orderData.map((item) => (
-                  <RestaurantOrderDelivery
-                    key={item.id.toString()}
-                    id={item.id}
-                    vData={item.vender}
-                    oData={item.orders}
-                    orderStatus={item.order_string_value}
-                    tPrice={item.customer_amount}
-                    onAction={() => console.log("handle Clicked")}
-                  />
-                ))}
-              </View>
-            ) : (
-              <View style={styles.noItemBox}>
-                <AppText style={styles.noItemText}>No Orders found</AppText>
-              </View>
-            )}
+            <View>
+              {orderData.length >= 1 ? (
+                <View>
+                  {orderData.map((item) => (
+                    <RestaurantOrderDelivery
+                      key={item.id.toString()}
+                      id={item.id}
+                      vData={item.vender}
+                      oData={item.orders}
+                      orderStatus={item.order_string_value}
+                      tPrice={item.customer_amount}
+                      onAction={() => console.log("handle Clicked")}
+                    />
+                  ))}
+                </View>
+              ) : (
+                <View style={styles.noItemBox}>
+                  <AppText style={styles.noItemText}>No Orders found</AppText>
+                </View>
+              )}
+            </View>
           </ScrollView>
         )}
       </Screen>
